@@ -1,10 +1,11 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
+import MessageFeedItem from './src/components/MessageFeedItem/messageFeedItem.component';
 
 export default function App() {
   return (
     <View style={styles.container}>
-      <Text>Hello World!</Text>
+      <MessageFeedItem />
       <StatusBar style="auto" />
     </View>
   );
