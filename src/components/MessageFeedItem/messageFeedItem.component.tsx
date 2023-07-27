@@ -1,12 +1,13 @@
 import React from 'react';
 import { Text, View, Image } from 'react-native';
+import styles from './messageFeedItem.component';
 
 const MessageFeedItem = () => {
   return (
-    <View>
+    <View style={styles.container}>
       <Image
         source={{ uri: 'https://notjustdev-dummy.s3.us-east-2.amazonaws.com/avatars/lukas.jpeg' }}
-        style={{ width: 50, height: 50 }}
+        style={styles.avatar}
       ></Image>
       <View>
         <View>
