@@ -1,7 +1,7 @@
 import React from 'react';
 import { FlatList, View } from 'react-native';
-import MessageFeedItem from '../components/MessageFeedItem/messageFeedItem.component';
-import chatData from '../../assets/data/chats.json';
+import MessageFeedItem from '../../components/messageFeedItem/messageFeedItem.component';
+import chatData from '../../../assets/data/chats.json';
 
 // const chatDummyData = {
 //   id: '1',
