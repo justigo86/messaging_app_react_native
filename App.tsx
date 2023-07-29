@@ -9,7 +9,7 @@ export default function App() {
   return (
     <View style={styles.container}>
       <MessageChat />
-      <MessageFeed />
+      {/* <MessageFeed /> */}
       <StatusBar style="auto" />
     </View>
   );
