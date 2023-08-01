@@ -4,15 +4,20 @@ import styles from './messageFeedItem.styles';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { useNavigation } from '@react-navigation/native';
+import { ChatRoom } from '../../../types';
 
 dayjs.extend(relativeTime);
+
+export type MessageFeedItemProps = {
+  chatRoom: ChatRoom;
+};
 
 const MessageFeedItem = ({ chat }) => {
   const navigation = useNavigation();
   return (
     <Pressable
       style={styles.container}
-      // onPress={() => navigation.navigate('Chat', { id: chat.id, name: chat.user.name })}
+      // onPress={() => navigation.navigate('Chat')}
     >
       <Image source={{ uri: chat.user.image }} style={styles.avatar}></Image>
       <View style={styles.messageContent}>

@@ -11,9 +11,7 @@ const MessageChat = () => {
   const route = useRoute();
   const navigation = useNavigation();
 
-  console.log(route);
-
-  // navigation.setOptions({ title: route.params.name });
+  // useEffect
 
   return (
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.bg}>
