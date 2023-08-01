@@ -9,8 +9,13 @@ const Navigator = () => {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="Feed" component={MessageFeed} />
+      <Stack.Navigator
+        screenOptions={{
+          headerStyle: { backgroundColor: 'whitesmoke' },
+          headerTitleAlign: 'center',
+        }}
+      >
+        <Stack.Screen name="Message Feed" component={MessageFeed} />
         <Stack.Screen name="Chat" component={MessageChat} />
       </Stack.Navigator>
     </NavigationContainer>

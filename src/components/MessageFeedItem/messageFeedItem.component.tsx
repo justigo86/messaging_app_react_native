@@ -15,10 +15,7 @@ export type MessageFeedItemProps = {
 const MessageFeedItem = ({ chat }) => {
   const navigation = useNavigation();
   return (
-    <Pressable
-      style={styles.container}
-      // onPress={() => navigation.navigate('Chat')}
-    >
+    <Pressable style={styles.container} onPress={() => navigation.navigate('Chat' as never)}>
       <Image source={{ uri: chat.user.image }} style={styles.avatar}></Image>
       <View style={styles.messageContent}>
         <View style={styles.row}>
