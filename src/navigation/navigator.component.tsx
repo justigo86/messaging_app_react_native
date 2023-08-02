@@ -15,7 +15,7 @@ const Navigator = () => {
           headerTitleAlign: 'center',
         }}
       >
-        <Stack.Screen name="Message Feed" component={MessageFeed} />
+        <Stack.Screen name="MessageFeed" component={MessageFeed} />
         <Stack.Screen name="Chat" component={MessageChat} />
       </Stack.Navigator>
     </NavigationContainer>

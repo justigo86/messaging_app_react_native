@@ -2,6 +2,7 @@ import React from 'react';
 import { FlatList, View } from 'react-native';
 import MessageFeedItem from '../../components/messageFeedItem/messageFeedItem.component';
 import chatData from '../../../assets/data/chats.json';
+import { useNavigation } from '@react-navigation/native';
 
 // const chatDummyData = {
 //   id: '1',
@@ -16,9 +17,13 @@ import chatData from '../../../assets/data/chats.json';
 // };
 
 const MessageFeed = () => {
+  const navigation = useNavigation();
   return (
     <View>
-      <FlatList data={chatData} renderItem={({ item }) => <MessageFeedItem chat={item} />} />
+      <FlatList
+        data={chatData}
+        renderItem={({ item }) => <MessageFeedItem navigation={navigation} chat={item} />}
+      />
     </View>
   );
 };

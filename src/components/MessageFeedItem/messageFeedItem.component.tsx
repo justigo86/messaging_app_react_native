@@ -8,14 +8,24 @@ import { ChatRoom } from '../../../types';
 
 dayjs.extend(relativeTime);
 
-export type MessageFeedItemProps = {
-  chatRoom: ChatRoom;
+export type MessageFeedParamList = {
+  name: string;
+  params: {
+    id: string;
+    name: string;
+  };
 };
 
-const MessageFeedItem = ({ chat }) => {
-  const navigation = useNavigation();
+const MessageFeedItem = ({ chat, navigation }) => {
+  // const navigation = useNavigation();
+  const onClick = () => {
+    navigation.navigate('Chat', {
+      id: chat.id,
+      name: chat.user.name,
+    });
+  };
   return (
-    <Pressable style={styles.container} onPress={() => navigation.navigate('Chat' as never)}>
+    <Pressable style={styles.container} onPress={onClick}>
       <Image source={{ uri: chat.user.image }} style={styles.avatar}></Image>
       <View style={styles.messageContent}>
         <View style={styles.row}>
