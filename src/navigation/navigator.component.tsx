@@ -3,6 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import MessageFeed from '../pages/messageFeed/messageFeed';
 import MessageChat from '../pages/messageChat/messageChat';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import TabNavigator from './tabNavigator.component';
 
 const Navigator = () => {
   const Stack = createNativeStackNavigator();
@@ -15,6 +16,7 @@ const Navigator = () => {
           headerTitleAlign: 'center',
         }}
       >
+        <Stack.Screen name="Tabs" component={TabNavigator} />
         <Stack.Screen name="MessageFeed" component={MessageFeed} />
         <Stack.Screen name="Chat" component={MessageChat} />
       </Stack.Navigator>
