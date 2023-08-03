@@ -16,7 +16,7 @@ const Navigator = () => {
           headerTitleAlign: 'center',
         }}
       >
-        <Stack.Screen name="Tabs" component={TabNavigator} />
+        <Stack.Screen name="Tabs" component={TabNavigator} options={{ headerShown: false }} />
         <Stack.Screen name="MessageFeed" component={MessageFeed} />
         <Stack.Screen name="Chat" component={MessageChat} />
       </Stack.Navigator>

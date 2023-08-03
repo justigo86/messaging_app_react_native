@@ -18,7 +18,11 @@ const MessageChat = ({ route }) => {
   }, [route.params.name]);
 
   return (
-    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.bg}>
+    <KeyboardAvoidingView
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 60 : 100}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={styles.bg}
+    >
       <ImageBackground source={bg} style={styles.bg}>
         <FlatList
           data={messages}
