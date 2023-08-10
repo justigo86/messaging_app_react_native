@@ -2,15 +2,17 @@ import React from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { View } from 'react-native';
 import styles from './App.styles';
-import MessageChat from './src/pages/messageChat/messageChat';
+import MessageChat from './src/pages/messageChat/messageChat.page';
 import Navigator from './src/navigation/navigator.component';
 import { Amplify } from 'aws-amplify';
+// @ts-ignore
+import { withAuthenticator } from 'aws-amplify-react-native';
 import awsconfig from './src/aws-exports';
 
 Amplify.configure(awsconfig);
-// Amplify.configure({ ...awsconfig, Analytics: { disabled: true } });  //if needed
+// Amplify.configure({ ...awsconfig, Analytics: { disabled: true } }); //if needed
 
-export default function App() {
+function App() {
   return (
     <View style={styles.container}>
       {/* <MessageChat /> */}
@@ -19,3 +21,5 @@ export default function App() {
     </View>
   );
 }
+
+export default withAuthenticator(App);

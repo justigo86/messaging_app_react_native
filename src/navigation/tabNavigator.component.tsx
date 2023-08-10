@@ -1,10 +1,11 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import MessageFeed from '../pages/messageFeed/messageFeed';
+import MessageFeed from '../pages/messageFeed/messageFeed.page';
 import { Ionicons, Entypo } from '@expo/vector-icons';
 
 const Tab = createBottomTabNavigator();
 
 import { View, Text, StyleSheet } from 'react-native';
+import Settings from '../pages/settings/settings.page';
 export const DummyComponent = () => {
   return (
     <View style={dummyStyles.container}>
@@ -63,7 +64,7 @@ const TabNavigator = () => {
       />
       <Tab.Screen
         name="Settings"
-        component={DummyComponent}
+        component={Settings}
         options={{ tabBarIcon: () => <Ionicons size={32} name="settings" /> }}
       />
     </Tab.Navigator>

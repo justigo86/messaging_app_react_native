@@ -1,10 +1,10 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import MessageFeed from '../pages/messageFeed/messageFeed';
-import MessageChat from '../pages/messageChat/messageChat';
+import MessageFeed from '../pages/messageFeed/messageFeed.page';
+import MessageChat from '../pages/messageChat/messageChat.page';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import TabNavigator from './tabNavigator.component';
-import Contacts from '../pages/contacts/contacts.component';
+import Contacts from '../pages/contacts/contacts.page';
 
 const Navigator = () => {
   const Stack = createNativeStackNavigator();
