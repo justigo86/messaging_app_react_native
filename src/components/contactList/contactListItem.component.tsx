@@ -1,4 +1,4 @@
-import { Text, Image, StyleSheet, Pressable, View } from 'react-native';
+import { Text, Image, Pressable, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import styles from './contactListItem.styles';
 import dayjs from 'dayjs';
