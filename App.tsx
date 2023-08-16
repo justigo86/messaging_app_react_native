@@ -2,12 +2,12 @@ import React, { useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { View } from 'react-native';
 import styles from './App.styles';
-import MessageChat from './src/pages/messageChat/messageChat.page';
+// import MessageChat from './src/pages/messageChat/messageChat.page';
 import Navigator from './src/navigation/navigator.component';
 import { API, Amplify, Auth, graphqlOperation } from 'aws-amplify';
 // @ts-ignore
 import { withAuthenticator } from 'aws-amplify-react-native';
-import awsconfig from './src/aws-exports';
+import awsmobile from './src/aws-exports';
 import { getUser } from './src/graphql/queries';
 import { createUser } from './src/graphql/mutations';
 import { GraphQLResult } from '@aws-amplify/api';
@@ -60,8 +60,8 @@ export interface UserData {
   username: string;
 }
 
-Amplify.configure(awsconfig);
-// Amplify.configure({ ...awsconfig, Analytics: { disabled: true } }); //if needed
+// Amplify.configure(awsmobile);
+Amplify.configure({ ...awsmobile, Analytics: { disabled: true } }); //if needed
 
 const randomImages = [
   'https://hieumobile.com/wp-content/uploads/avatar-among-us-2.jpg',
@@ -91,7 +91,7 @@ function App() {
       }
       //if user is not in DB, create using createUser from \queries.ts
       const newUser = {
-        id: userData.data?.attributes.sub,
+        id: userData.data?.attributes?.sub,
         name: userData.data?.username,
         imageUri: getRandomImage(),
         status: 'Placeholder status.',
