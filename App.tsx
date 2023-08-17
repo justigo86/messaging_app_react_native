@@ -12,53 +12,55 @@ import { getUser } from './src/graphql/queries';
 import { createUser } from './src/graphql/mutations';
 import { GraphQLResult } from '@aws-amplify/api';
 
-export interface UserData {
-  Session: null;
-  attributes: {
-    email: string;
-    email_verified: Boolean;
-    phone_number: string;
-    phone_number_verified: Boolean;
-    sub: string;
-  };
-  authenticationFlowType: string;
-  client: {
-    endpoint: string;
-    fetchOptions: {};
-  };
-  deviceKey: string;
-  getUser(): {};
-  keyPrefix: string;
-  pool: {
-    advancedSecurityDataCollectionFlag: Boolean;
+export type UserData = {
+  getUser: {
+    _typename: 'userData';
+    Session: null;
+    attributes: {
+      email: string;
+      email_verified: Boolean;
+      phone_number: string;
+      phone_number_verified: Boolean;
+      sub: string;
+    };
+    authenticationFlowType: string;
     client: {
       endpoint: string;
-      fetchOptions: [{}];
+      fetchOptions: {};
     };
-    clientId: string;
+    deviceKey: string;
+    keyPrefix: string;
+    pool: {
+      advancedSecurityDataCollectionFlag: Boolean;
+      client: {
+        endpoint: string;
+        fetchOptions: [{}];
+      };
+      clientId: string;
+      storage: [];
+      userPoolId: string;
+      wrapRefreshSessionCallback: [];
+    };
+    preferredMFA: string;
+    signInUserSession: {
+      accessToken: {
+        jwtToken: string;
+        payload: [{}];
+      };
+      clockDrift: number;
+      idToken: {
+        jwtToken: string;
+        payload: [{}];
+      };
+      refreshToken: {
+        token: string;
+      };
+    };
     storage: [];
-    userPoolId: string;
-    wrapRefreshSessionCallback: [];
+    userDataKey: string;
+    username: string;
   };
-  preferredMFA: string;
-  signInUserSession: {
-    accessToken: {
-      jwtToken: string;
-      payload: [{}];
-    };
-    clockDrift: number;
-    idToken: {
-      jwtToken: string;
-      payload: [{}];
-    };
-    refreshToken: {
-      token: string;
-    };
-  };
-  storage: [];
-  userDataKey: string;
-  username: string;
-}
+};
 
 // Amplify.configure(awsmobile);
 Amplify.configure({ ...awsmobile, Analytics: { disabled: true } }); //if needed
@@ -79,11 +81,13 @@ function App() {
     const fetchUser = async () => {
       //pull current user data to assign to variable
       const authUser = await Auth.currentAuthenticatedUser({ bypassCache: true });
+      console.log(authUser);
       //bypassCache prevents using cache for user authentication to check DB each time
       //import getUser query to pull SubID from user DB data
       const userData = (await API.graphql(
         graphqlOperation(getUser, { id: authUser.attributes.sub })
-      )) as GraphQLResult<UserData>;
+      )) as { data: UserData };
+      console.log(userData);
       //check if user in DB
       if (userData.data?.getUser) {
         console.log('User already in DB.');
@@ -91,9 +95,9 @@ function App() {
       }
       //if user is not in DB, create using createUser from \queries.ts
       const newUser = {
-        id: userData.data?.attributes?.sub,
-        name: userData.data?.username,
-        imageUri: getRandomImage(),
+        id: authUser.attributes.sub,
+        name: authUser.username,
+        image: getRandomImage(),
         status: 'Placeholder status.',
       };
       console.log(newUser);
