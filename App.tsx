@@ -12,9 +12,9 @@ import { getUser } from './src/graphql/queries';
 import { createUser } from './src/graphql/mutations';
 import { GraphQLResult } from '@aws-amplify/api';
 
-export type UserData = {
+type UserData = {
   getUser: {
-    _typename: 'userData';
+    __typename: 'userData';
     Session: null;
     attributes: {
       email: string;
