@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { API, graphqlOperation } from 'aws-amplify';
 import { listUsers } from '../../graphql/queries';
 import { GraphQLResult } from '@aws-amplify/api';
+import { useNavigation } from '@react-navigation/native';
 
 export interface UsersData {
   listUsers: {
@@ -17,6 +18,7 @@ export interface UsersData {
 
 const Contacts = () => {
   const [users, setUsers] = useState([]);
+  const navigation = useNavigation();
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -38,7 +40,7 @@ const Contacts = () => {
     <FlatList
       // data={chats} - changed when API incorporated
       data={users}
-      renderItem={({ item }) => <ContactListItem user={item} />}
+      renderItem={({ item }) => <ContactListItem user={item} navigation={navigation} />}
       style={{ backgroundColor: 'white' }}
     />
   );

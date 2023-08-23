@@ -3,8 +3,7 @@ import { Text, View, Image, Pressable } from 'react-native';
 import styles from './messageFeedItem.styles';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import { useNavigation } from '@react-navigation/native';
-import { ChatRoom } from '../../../types';
+// import { useNavigation } from '@react-navigation/native';
 
 dayjs.extend(relativeTime);
 

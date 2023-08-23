@@ -1,9 +1,9 @@
 import { Text, Image, Pressable, View } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+// import { useNavigation } from '@react-navigation/native';
 import styles from './contactListItem.styles';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import { API, graphqlOperation } from 'aws-amplify';
+import { API, Auth, graphqlOperation } from 'aws-amplify';
 import { createMessageChat } from '../../graphql/mutations';
 import { Message, ModelMessageChatUserConnection, ModelMessageConnection } from '../../API';
 
@@ -65,12 +65,13 @@ type MessageChatData = {
 
 dayjs.extend(relativeTime);
 
-const ContactListItem = ({ user }) => {
-  const navigation = useNavigation();
+const ContactListItem = ({ user, navigation }) => {
+  // const navigation = useNavigation();
 
   const onPress = async () => {
     console.warn('Pressed');
 
+    //create chat
     const newMessageChatData = (await API.graphql(
       graphqlOperation(createMessageChat, { input: {} })
     )) as { data: MessageChatData };
@@ -78,6 +79,25 @@ const ContactListItem = ({ user }) => {
     if (!newMessageChatData.data?.createMessageChat) {
       console.log('Chat error.');
     }
+    const newMessageChat = newMessageChatData.data.createMessageChat;
+
+    //add user to chat
+    await API.graphql(
+      graphqlOperation(createMessageChat, {
+        input: { messageChatId: newMessageChat.id, userId: user.id },
+      })
+    );
+
+    //add auth user to chat
+    const authUser = await Auth.currentAuthenticatedUser();
+    await API.graphql(
+      graphqlOperation(createMessageChat, {
+        input: { messageChatId: newMessageChat.id, userId: authUser.attributes.sub },
+      })
+    );
+
+    //navigate user to chat
+    navigation.navigate('Chat', { id: newMessageChat.id });
   };
 
   return (
