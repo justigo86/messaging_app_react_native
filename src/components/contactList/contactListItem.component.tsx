@@ -4,7 +4,7 @@ import styles from './contactListItem.styles';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { API, Auth, graphqlOperation } from 'aws-amplify';
-import { createMessageChat } from '../../graphql/mutations';
+import { createMessageChat, createMessageChatUser } from '../../graphql/mutations';
 import { Message, ModelMessageChatUserConnection, ModelMessageConnection } from '../../API';
 
 type MessageChatData = {
@@ -83,7 +83,7 @@ const ContactListItem = ({ user, navigation }) => {
 
     //add user to chat
     await API.graphql(
-      graphqlOperation(createMessageChat, {
+      graphqlOperation(createMessageChatUser, {
         input: { messageChatId: newMessageChat.id, userId: user.id },
       })
     );
@@ -91,7 +91,7 @@ const ContactListItem = ({ user, navigation }) => {
     //add auth user to chat
     const authUser = await Auth.currentAuthenticatedUser();
     await API.graphql(
-      graphqlOperation(createMessageChat, {
+      graphqlOperation(createMessageChatUser, {
         input: { messageChatId: newMessageChat.id, userId: authUser.attributes.sub },
       })
     );
