@@ -11,7 +11,7 @@ const MessageChat = ({ route }) => {
   // const route = useRoute();
   const navigation = useNavigation();
 
-  console.log(route);
+  // console.log(route);
 
   useEffect(() => {
     navigation.setOptions({ title: route.params.name });

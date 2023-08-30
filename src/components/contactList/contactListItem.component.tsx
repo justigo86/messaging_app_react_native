@@ -75,7 +75,7 @@ const ContactListItem = ({ user, navigation }) => {
     const newMessageChatData = (await API.graphql(
       graphqlOperation(createMessageChat, { input: {} })
     )) as { data: MessageChatData };
-    console.log(newMessageChatData);
+    // console.log(newMessageChatData);
     if (!newMessageChatData.data?.createMessageChat) {
       console.log('Chat error.');
     }

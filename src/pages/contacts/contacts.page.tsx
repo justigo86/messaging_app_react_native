@@ -7,14 +7,37 @@ import { listUsers } from '../../graphql/queries';
 import { GraphQLResult } from '@aws-amplify/api';
 import { useNavigation } from '@react-navigation/native';
 
-export interface UsersData {
+type UsersData = {
   listUsers: {
     __typename: string;
-    items: [];
+    items: [
+      {
+        id: string;
+        name: string;
+        image?: string;
+        status: string;
+        Messages: {
+          nextToken: string | null;
+          startedAt: string | null;
+          __typename: string;
+        };
+        messagechats: {
+          nextToken: string | null;
+          startedAt: string | null;
+          __typename: string;
+        };
+        createdAt: string | null;
+        updatedAt: string | null;
+        _version: string;
+        _deleted: string;
+        _lastChangedAt: string;
+        __typename: string;
+      },
+    ];
     nextToken: null;
     startedAt: null;
   };
-}
+};
 
 const Contacts = () => {
   const [users, setUsers] = useState([]);
@@ -22,6 +45,7 @@ const Contacts = () => {
 
   useEffect(() => {
     const fetchUsers = async () => {
+      console.log('contacts page');
       try {
         //graphql API module - that uses graphqlOperation (async) to query users
         const usersData = (await API.graphql(
@@ -30,7 +54,7 @@ const Contacts = () => {
         // console.log(usersData); //check user data when accessing Contacts
         setUsers(usersData?.data?.listUsers?.items);
       } catch (e) {
-        console.log(e);
+        console.log('contact error', e);
       }
     };
     fetchUsers();

@@ -19,19 +19,53 @@ import { getUser } from './queries';
 //   },
 // };
 
+type GetUserData = {
+  getUser: {
+    name: string;
+    id: string;
+    messagechats: {
+      items: {
+        messageChat: {
+          id: string;
+          Users: {
+            items: {
+              id: string;
+              user: {
+                id: string;
+                image: string | null;
+                name: string;
+              };
+            };
+          };
+          MostRecentMessage: {
+            id: string;
+            createdAt: string;
+            text: string;
+          };
+        };
+        id: string;
+      };
+    };
+  };
+};
+
 const MessageFeed = () => {
   const navigation = useNavigation();
 
   useEffect(() => {
     const fetchMessageChats = async () => {
-      // try {
+      try {
+        const authUser = await Auth.currentAuthenticatedUser();
 
-      // }
-      const authUser = await Auth.currentAuthenticatedUser();
+        const userData = (await API.graphql(
+          graphqlOperation(getUser, { id: authUser.attributes.sub })
+        )) as { data: GetUserData };
 
-      const userData = await API.graphql(
-        graphqlOperation(getUser, { id: authUser.attributes.sub })
-      );
+        // console.log(userData.data.getUser.messagechats.items.messageChat);
+        console.log('message feed');
+      } catch (e) {
+        console.log(e);
+      }
     };
     fetchMessageChats();
   }, []);
