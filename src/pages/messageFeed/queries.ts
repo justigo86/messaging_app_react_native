@@ -2,33 +2,31 @@
 //   __typename
 // }
 export const getUser = /* GraphQL */ `
-  query MyQuery {
-    query GetUser($id: ID!) {
-      getUser(id: $id) {
-        name
-        id
-        messagechats {
-          items {
-            messageChat {
-              id
-              Users {
-                items {
+  query GetUser($id: ID!) {
+    getUser(id: $id) {
+      name
+      id
+      messagechats {
+        items {
+          messageChat {
+            id
+            Users {
+              items {
+                id
+                user {
                   id
-                  user {
-                    id
-                    image
-                    name
-                  }
+                  image
+                  name
                 }
               }
-              MostRecentMessage {
-                id
-                createdAt
-                text
-              }
             }
-            id
+            MostRecentMessage {
+              id
+              createdAt
+              text
+            }
           }
+          id
         }
       }
     }

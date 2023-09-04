@@ -20,22 +20,22 @@ const MessageFeedItem = ({ chat, navigation }) => {
   const onClick = () => {
     navigation.navigate('Chat', {
       id: chat.id,
-      name: chat.user.name,
+      name: chat.user?.name,
     });
   };
   return (
     <Pressable style={styles.container} onPress={onClick}>
-      <Image source={{ uri: chat.user.image }} style={styles.avatar}></Image>
+      <Image source={{ uri: chat.user?.image }} style={styles.avatar}></Image>
       <View style={styles.messageContent}>
         <View style={styles.row}>
           <Text style={styles.username} numberOfLines={1}>
-            {chat.user.name}
+            {chat.user?.name}
           </Text>
-          <Text style={styles.time}>{dayjs(chat.mostRecentMessage.createdAt).fromNow(true)}</Text>
+          <Text style={styles.time}>{dayjs(chat.mostRecentMessage?.createdAt).fromNow(true)}</Text>
           {/* wrapped created time in dayjs for relative time to local - .fromNow(true) removes "ago" */}
         </View>
         <Text style={styles.messageText} numberOfLines={2}>
-          {chat.mostRecentMessage.text}
+          {chat.mostRecentMessage?.text}
         </Text>
       </View>
     </Pressable>
