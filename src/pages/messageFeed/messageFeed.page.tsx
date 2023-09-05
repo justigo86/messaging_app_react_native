@@ -53,28 +53,6 @@ type GetUserData = {
 
 const MessageFeed = () => {
   const navigation = useNavigation();
-  // const [messageChats, setMessageChats] = useState<MessageChatData>({
-  //   messageChat: {
-  //     id: "",
-  //     Users: {
-  //       items: {
-  //         id: "",
-  //         user: {
-  //           id: "",
-  //           image: "",
-  //           name: "",
-  //         },
-  //       },
-  //     },
-  //     MostRecentMessage: {
-  //       id: "",
-  //       createdAt: "",
-  //       text: "",
-  //     },
-  //   },
-  //   id: "",
-  // });
-
   const [messageChats, setMessageChats] = useState<MessageChatData[]>([]);
 
   useEffect(() => {
@@ -86,7 +64,7 @@ const MessageFeed = () => {
           graphqlOperation(getUser, { id: authUser.attributes.sub })
         )) as { data: GetUserData };
         //)) as GraphQLResult<GetUserData>;
-        console.log('message feed');
+        // console.log('message feed');
 
         setMessageChats(userData.data.getUser.messagechats.items);
 
@@ -103,7 +81,9 @@ const MessageFeed = () => {
       <FlatList
         data={messageChats}
         style={styles.list}
-        renderItem={({ item }) => <MessageFeedItem navigation={navigation} chat={item} />}
+        renderItem={({ item }) => (
+          <MessageFeedItem navigation={navigation} chat={item.messageChat} />
+        )}
       />
     </View>
   );

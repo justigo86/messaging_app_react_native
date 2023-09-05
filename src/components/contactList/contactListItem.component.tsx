@@ -6,6 +6,7 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import { API, Auth, graphqlOperation } from 'aws-amplify';
 import { createMessageChat, createMessageChatUser } from '../../graphql/mutations';
 import { Message, ModelMessageChatUserConnection, ModelMessageConnection } from '../../API';
+import { getUserChat } from '../../services/chatService';
 
 type MessageChatData = {
   createMessageChat: {
@@ -70,6 +71,13 @@ const ContactListItem = ({ user, navigation }) => {
 
   const onPress = async () => {
     console.warn('Pressed');
+
+    //check if user chat exists
+    const existingChat = await getUserChat(user.id);
+    if (existingChat) {
+      navigation.navigate('Chat', { id: existingChat.id });
+      return;
+    }
 
     //create chat
     const newMessageChatData = (await API.graphql(

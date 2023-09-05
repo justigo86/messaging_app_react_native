@@ -14,7 +14,7 @@ type UsersData = {
       {
         id: string;
         name: string;
-        image?: string;
+        image: string;
         status: string;
         Messages: {
           nextToken: string | null;
