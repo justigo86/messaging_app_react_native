@@ -10,6 +10,7 @@ import InputBox from '../../components/inputBox/inputBox.component';
 const MessageChat = ({ route }) => {
   // const route = useRoute();
   const navigation = useNavigation();
+  const messageChatID = route.params.id;
 
   // console.log(route);
 
@@ -30,7 +31,7 @@ const MessageChat = ({ route }) => {
           style={styles.list}
           inverted
         />
-        <InputBox />
+        <InputBox messageChatID={messageChatID} />
       </ImageBackground>
     </KeyboardAvoidingView>
   );
