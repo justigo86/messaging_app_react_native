@@ -54,7 +54,7 @@ const MessageChat = ({ route }) => {
   useEffect(() => {
     const fetchChats = async () => {
       const chatData = (await API.graphql(
-        graphqlOperation(messageChatUsersByUserId, { chatId: route.params.id })
+        graphqlOperation(messageChatUsersByUserId, { userId: route.params.id })
       )) as { data: MessageChatByUserID };
 
       setChat(chatData.data.messageChatUsersByUserId.items);
@@ -69,6 +69,8 @@ const MessageChat = ({ route }) => {
   if (!chat) {
     return <ActivityIndicator />;
   }
+
+  // console.log(chat);
 
   return (
     <KeyboardAvoidingView

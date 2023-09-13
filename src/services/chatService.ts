@@ -4,18 +4,22 @@ type GetUserData = {
   getUser: {
     id: string;
     messagechats: {
-      items: {
-        messageChat: {
-          id: string;
-          Users: {
-            items: {
-              user: {
-                id: string;
-              };
+      items: [
+        {
+          messageChat: {
+            id: string;
+            Users: {
+              items: [
+                {
+                  user: {
+                    id: string;
+                  };
+                },
+              ];
             };
           };
-        };
-      };
+        },
+      ];
     };
   };
 };
@@ -27,13 +31,18 @@ export const getUserChat = async (userID) => {
   const userData = (await API.graphql(
     graphqlOperation(getUser, { id: authUser.attributes.sub })
   )) as { data: GetUserData };
-  const userChats = userData.data?.getUser?.messagechats?.items[0] || [];
+  const userChats = userData.data?.getUser?.messagechats?.items || [];
+  // console.log(userChats);
 
-  const userChat = userChats.find((chat) => {
-    return chat.messageChat.Users.items.some((users) => users.user.id === userID);
-  });
+  // const userChat = userChats.find((chat) => {
+  //   chat.messageChat.Users.items.some((users) => users.user.id === userID);
+  // });
+  // return userChat;
 
-  return userChat;
+  const userWithMatchingID = userChats
+    .map((chat) => chat.messageChat?.Users.items.find((users) => users.user.id === userID))
+    .find((user) => user !== undefined);
+  return userWithMatchingID;
 };
 
 export const getUser = /* GraphQL */ `

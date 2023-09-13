@@ -47,7 +47,10 @@ const MessageFeedItem = ({ chat, navigation }) => {
 
   return (
     <Pressable style={styles.container} onPress={onClick}>
-      <Image source={{ uri: otherUser?.image }} style={styles.avatar}></Image>
+      <Image
+        source={otherUser.image ? { uri: otherUser.image } : null}
+        style={styles.avatar}
+      ></Image>
       <View style={styles.messageContent}>
         <View style={styles.row}>
           <Text style={styles.username} numberOfLines={1}>

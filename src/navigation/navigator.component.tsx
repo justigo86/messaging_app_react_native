@@ -6,8 +6,15 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import TabNavigator from './tabNavigator.component';
 import Contacts from '../pages/contacts/contacts.page';
 
+export type RootStackParamList = {
+  Tabs: undefined;
+  MessageFeed: undefined;
+  Chat: { id: any };
+  Contacts: undefined;
+};
+
 const Navigator = () => {
-  const Stack = createNativeStackNavigator();
+  const Stack = createNativeStackNavigator<RootStackParamList>();
 
   return (
     <NavigationContainer>
