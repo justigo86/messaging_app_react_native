@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { FlatList, View } from 'react-native';
 import MessageFeedItem from '../../components/messageFeedItem/messageFeedItem.component';
-import chatData from '../../../assets/data/chats.json';
+// import chatData from '../../../assets/data/chats.json';
 import { useNavigation } from '@react-navigation/native';
 import styles from './messageFeed.styles';
 import { API, Auth, graphqlOperation } from 'aws-amplify';

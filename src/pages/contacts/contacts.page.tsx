@@ -2,15 +2,15 @@ import { FlatList } from 'react-native';
 // import chats from '../../../assets/data/chats.json';
 import ContactListItem from '../../components/contactList/contactListItem.component';
 import { useEffect, useState } from 'react';
-import { API, Auth, graphqlOperation } from 'aws-amplify';
+import { API, graphqlOperation } from 'aws-amplify';
 import { listUsers } from '../../graphql/queries';
-import { createMessageChat, createMessageChatUser } from '../../graphql/mutations';
+// import { createMessageChat, createMessageChatUser } from '../../graphql/mutations';
 import { GraphQLResult } from '@aws-amplify/api';
-import { useNavigation } from '@react-navigation/native';
-import { getUserChat } from '../../services/chatService';
-import { RootStackParamList } from '../../navigation/navigator.component';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { Message, ModelMessageChatUserConnection, ModelMessageConnection } from '../../API';
+// import { useNavigation } from '@react-navigation/native';
+// import { getUserChat } from '../../services/chatService';
+// import { RootStackParamList } from '../../navigation/navigator.component';
+// import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+// import { Message, ModelMessageChatUserConnection, ModelMessageConnection } from '../../API';
 
 type UsersData = {
   listUsers: {
@@ -66,71 +66,71 @@ type MessageChatData = {
   id: string;
 };
 
-type GetUserData = {
-  getUser: {
-    name: string;
-    id: string;
-    messagechats: {
-      items: MessageChatData[];
-    };
-  };
-};
+// type GetUserData = {
+//   getUser: {
+//     name: string;
+//     id: string;
+//     messagechats: {
+//       items: MessageChatData[];
+//     };
+//   };
+// };
 
-type CreateMessageChat = {
-  createMessageChat: {
-    id: string;
-    Messages: {
-      items: {
-        id: string;
-        Messages: ModelMessageConnection;
-        Users: ModelMessageChatUserConnection;
-        MostRecentMessage: Message;
-        createdAt: string;
-        updatedAt: string;
-        _version: number;
-        _deleted: Boolean;
-        _lastChangedAt: string;
-        messageChatMostRecentMessageId: string;
-        __typename: 'messageChatItem';
-      };
-      Users: {
-        items: {
-          id: string;
-          userId: string;
-          messageChatId: string;
-          createdAt: string;
-          updatedAt: string;
-          _version: number;
-          _deleted: Boolean;
-          _lastChangedAt: string;
-          __typename: 'messageUserItem';
-        };
-        nextToken;
-        startedAt: string;
-        __typename: 'messageUser';
-      };
-      MostRecentMessage: {
-        id: string;
-        text: string;
-        createdAt: string;
-        messagechatID: string;
-        userID: string;
-        updatedAt: string;
-        _version: number;
-        _deleted: Boolean;
-        _lastChangedAt: string;
-        __typename: 'mostRecentMessage';
-      };
-      createdAt: string;
-      updatedAt: string;
-      _version: number;
-      _deleted: Boolean;
-      _lastChangedAt: string;
-      messageChatMostRecentMessageId: string;
-      __typename: 'messageChat';
-    };
-  };
-};
+// type CreateMessageChat = {
+//   createMessageChat: {
+//     id: string;
+//     Messages: {
+//       items: {
+//         id: string;
+//         Messages: ModelMessageConnection;
+//         Users: ModelMessageChatUserConnection;
+//         MostRecentMessage: Message;
+//         createdAt: string;
+//         updatedAt: string;
+//         _version: number;
+//         _deleted: Boolean;
+//         _lastChangedAt: string;
+//         messageChatMostRecentMessageId: string;
+//         __typename: 'messageChatItem';
+//       };
+//       Users: {
+//         items: {
+//           id: string;
+//           userId: string;
+//           messageChatId: string;
+//           createdAt: string;
+//           updatedAt: string;
+//           _version: number;
+//           _deleted: Boolean;
+//           _lastChangedAt: string;
+//           __typename: 'messageUserItem';
+//         };
+//         nextToken;
+//         startedAt: string;
+//         __typename: 'messageUser';
+//       };
+//       MostRecentMessage: {
+//         id: string;
+//         text: string;
+//         createdAt: string;
+//         messagechatID: string;
+//         userID: string;
+//         updatedAt: string;
+//         _version: number;
+//         _deleted: Boolean;
+//         _lastChangedAt: string;
+//         __typename: 'mostRecentMessage';
+//       };
+//       createdAt: string;
+//       updatedAt: string;
+//       _version: number;
+//       _deleted: Boolean;
+//       _lastChangedAt: string;
+//       messageChatMostRecentMessageId: string;
+//       __typename: 'messageChat';
+//     };
+//   };
+// };
 
 // type ContactPageProp = NativeStackNavigationProp<RootStackParamList, 'Contacts'>;
 //needed to set a prop type for useNavigation with Chat params used below

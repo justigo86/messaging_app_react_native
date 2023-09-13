@@ -6,14 +6,14 @@ import {
   Platform,
   ActivityIndicator,
 } from 'react-native';
-import { useRoute, useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import bg from '../../../assets/images/BG.png';
 import styles from './messageChat.styles';
 import messages from '../../../assets/data/messages.json';
 import Message from '../../components/message/message.component';
 import InputBox from '../../components/inputBox/inputBox.component';
 import { API, graphqlOperation } from 'aws-amplify';
-import { getUser, messageChatUsersByUserId } from '../../graphql/queries';
+import { messageChatUsersByUserId } from '../../graphql/queries';
 
 type MessageChatByUserID = {
   messageChatUsersByUserId: {
