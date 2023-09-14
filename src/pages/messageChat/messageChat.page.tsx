@@ -13,7 +13,7 @@ import messages from '../../../assets/data/messages.json';
 import Message from '../../components/message/message.component';
 import InputBox from '../../components/inputBox/inputBox.component';
 import { API, graphqlOperation } from 'aws-amplify';
-import { messageChatUsersByUserId } from '../../graphql/queries';
+import { getMessageChat, messageChatUsersByUserId } from '../../graphql/queries';
 
 type MessageChatByUserID = {
   messageChatUsersByUserId: {
@@ -43,6 +43,46 @@ type MessageChatByUserID = {
   };
 };
 
+type MessageChatData = {
+  getMessageChat: {
+    id: string;
+    Messages: {
+      items: {
+        id: string;
+        text: string;
+        createdAt: string;
+        messagechatID: string;
+        userID: string;
+        updatedAt: string;
+      };
+      nextToken: string;
+      startedAt: string;
+    };
+    Users: {
+      items: {
+        id: string;
+        userId: string;
+        messageChatId: string;
+        createdAt: string;
+        updatedAt: string;
+      };
+      nextToken: string;
+      startedAt: string;
+    };
+    MostRecentMessage: {
+      id: string;
+      text: string;
+      createdAt: string;
+      messagechatID: string;
+      userID: string;
+      updatedAt: string;
+    };
+    createdAt: string;
+    updatedAt: string;
+    messageChatMostRecentMessageId: string;
+  };
+};
+
 const MessageChat = ({ route }) => {
   // const route = useRoute();
   const navigation = useNavigation();
@@ -53,11 +93,15 @@ const MessageChat = ({ route }) => {
 
   useEffect(() => {
     const fetchChats = async () => {
+      // const chatData = (await API.graphql(
+      //   graphqlOperation(messageChatUsersByUserId, { userId: route.params.id })
+      // )) as { data: MessageChatByUserID };
       const chatData = (await API.graphql(
-        graphqlOperation(messageChatUsersByUserId, { userId: route.params.id })
-      )) as { data: MessageChatByUserID };
+        graphqlOperation(getMessageChat, { id: messageChatID })
+      )) as { data: MessageChatData };
 
-      setChat(chatData.data.messageChatUsersByUserId.items);
+      // setChat(chatData.data.messageChatUsersByUserId.items);
+      setChat(chatData.data.getMessageChat);
     };
     fetchChats();
   }, []);
@@ -70,7 +114,7 @@ const MessageChat = ({ route }) => {
     return <ActivityIndicator />;
   }
 
-  // console.log(chat);
+  console.log(chat);
 
   return (
     <KeyboardAvoidingView

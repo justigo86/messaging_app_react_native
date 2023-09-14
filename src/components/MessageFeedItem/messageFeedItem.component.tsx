@@ -20,10 +20,11 @@ const MessageFeedItem = ({ chat, navigation }) => {
   const [otherUser, setOtherUser] = useState(null);
   // const navigation = useNavigation();
 
+  console.log(chat.Users.items[0]);
+
   useEffect(() => {
     const fetchUser = async () => {
       const authUser = await Auth.currentAuthenticatedUser();
-      console.log(chat.Users.items[1]);
       // const userItem = chat.Users.items[0].find((item) => {
       //   item.user.id !== authUser.attributes.sub;
       // });
@@ -48,7 +49,7 @@ const MessageFeedItem = ({ chat, navigation }) => {
   return (
     <Pressable style={styles.container} onPress={onClick}>
       <Image
-        source={otherUser.image ? { uri: otherUser.image } : null}
+        source={otherUser?.image ? { uri: otherUser?.image } : null}
         style={styles.avatar}
       ></Image>
       <View style={styles.messageContent}>
