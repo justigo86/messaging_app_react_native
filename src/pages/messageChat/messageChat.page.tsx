@@ -114,8 +114,6 @@ const MessageChat = ({ route }) => {
     return <ActivityIndicator />;
   }
 
-  console.log(chat);
-
   return (
     <KeyboardAvoidingView
       keyboardVerticalOffset={Platform.OS === 'ios' ? 60 : 100}
@@ -124,7 +122,7 @@ const MessageChat = ({ route }) => {
     >
       <ImageBackground source={bg} style={styles.bg}>
         <FlatList
-          data={messages}
+          data={chat.Messages.items}
           renderItem={({ item }) => <Message message={item} />}
           style={styles.list}
           inverted
