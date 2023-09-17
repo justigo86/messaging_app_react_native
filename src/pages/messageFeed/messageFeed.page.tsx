@@ -68,7 +68,7 @@ const MessageFeed = () => {
 
         setMessageChats(userData.data.getUser.messagechats.items);
 
-        // console.log(userData.data.getUser.messagechats.items.messageChat);
+        // console.log(userData.data.getUser.messagechats.items[0].messageChat);
       } catch (e) {
         console.log(e, 'messageFeed error');
       }

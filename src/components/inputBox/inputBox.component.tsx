@@ -4,9 +4,24 @@ import { AntDesign, MaterialIcons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import styles from './inputBox.styles';
 import { API, Auth, graphqlOperation } from 'aws-amplify';
-import { createMessage } from '../../graphql/mutations';
+import { createMessage, updateMessageChat } from '../../graphql/mutations';
 
-const InputBox = ({ messageChatID }) => {
+type NewMessageData = {
+  createMessage: {
+    __typename: string;
+    _deleted: Boolean;
+    _lastChangedAt: string;
+    _version: Number;
+    createdAt: string;
+    id: string;
+    messagechatID: string;
+    text: string;
+    updatedAt: string;
+    userID: string;
+  };
+};
+
+const InputBox = ({ chat }) => {
   const [newMessage, setNewMessage] = useState('');
   const onMessageSend = async () => {
     try {
@@ -14,14 +29,27 @@ const InputBox = ({ messageChatID }) => {
       const authUser = await Auth.currentAuthenticatedUser();
 
       const newMessageData = {
-        messagechatID: messageChatID,
+        messagechatID: chat.id,
         userID: authUser.attributes.sub,
         text: newMessage,
       };
 
-      await API.graphql(graphqlOperation(createMessage, { input: newMessageData }));
+      const createNewMessage = (await API.graphql(
+        graphqlOperation(createMessage, { input: newMessageData })
+      )) as { data: NewMessageData };
+      console.log(createNewMessage);
 
       setNewMessage('');
+
+      await API.graphql(
+        graphqlOperation(updateMessageChat, {
+          input: {
+            _version: chat._version,
+            id: chat.id,
+            messageChatMostRecentMessageId: createNewMessage.data.createMessage.id,
+          },
+        })
+      );
     } catch (e) {
       console.log('message send failed', e);
     }

@@ -20,7 +20,7 @@ const MessageFeedItem = ({ chat, navigation }) => {
   const [otherUser, setOtherUser] = useState(null);
   // const navigation = useNavigation();
 
-  console.log(chat.Users.items[0]);
+  // console.log(chat);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -57,11 +57,11 @@ const MessageFeedItem = ({ chat, navigation }) => {
           <Text style={styles.username} numberOfLines={1}>
             {otherUser?.name}
           </Text>
-          <Text style={styles.time}>{dayjs(chat.mostRecentMessage?.createdAt).fromNow(true)}</Text>
+          <Text style={styles.time}>{dayjs(chat.MostRecentMessage?.createdAt).fromNow(true)}</Text>
           {/* wrapped created time in dayjs for relative time to local - .fromNow(true) removes "ago" */}
         </View>
         <Text style={styles.messageText} numberOfLines={2}>
-          {chat.mostRecentMessage?.text}
+          {chat.MostRecentMessage?.text}
         </Text>
       </View>
     </Pressable>

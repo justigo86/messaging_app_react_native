@@ -127,7 +127,7 @@ const MessageChat = ({ route }) => {
           style={styles.list}
           inverted
         />
-        <InputBox messageChatID={messageChatID} />
+        <InputBox chat={chat} />
       </ImageBackground>
     </KeyboardAvoidingView>
   );

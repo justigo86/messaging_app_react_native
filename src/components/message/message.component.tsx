@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text } from 'react-native';
 import styles from './message.styles';
 import dayjs from 'dayjs';
@@ -10,11 +10,15 @@ dayjs.extend(relativeTime);
 const Message = ({ message }) => {
   const [user, setUser] = useState(false);
 
-  const userMessage = async () => {
-    const authUser = await Auth.currentAuthenticatedUser();
+  useEffect(() => {
+    const userMessage = async () => {
+      const authUser = await Auth.currentAuthenticatedUser();
 
-    setUser(message.userID === authUser.attributes.sub);
-  };
+      setUser(message.userID === authUser.attributes.sub);
+    };
+
+    userMessage();
+  }, []);
 
   return (
     <View
