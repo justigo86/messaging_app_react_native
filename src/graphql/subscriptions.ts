@@ -203,6 +203,8 @@ export const onCreateMessageChat = /* GraphQL */ `
   ) {
     onCreateMessageChat(filter: $filter) {
       id
+      name
+      image
       Messages {
         items {
           id
@@ -264,6 +266,8 @@ export const onUpdateMessageChat = /* GraphQL */ `
   ) {
     onUpdateMessageChat(filter: $filter) {
       id
+      name
+      image
       Messages {
         items {
           id
@@ -325,6 +329,8 @@ export const onDeleteMessageChat = /* GraphQL */ `
   ) {
     onDeleteMessageChat(filter: $filter) {
       id
+      name
+      image
       Messages {
         items {
           id
@@ -412,6 +418,8 @@ export const onCreateMessageChatUser = /* GraphQL */ `
       }
       messageChat {
         id
+        name
+        image
         Messages {
           nextToken
           startedAt
@@ -483,6 +491,8 @@ export const onUpdateMessageChatUser = /* GraphQL */ `
       }
       messageChat {
         id
+        name
+        image
         Messages {
           nextToken
           startedAt
@@ -554,6 +564,8 @@ export const onDeleteMessageChatUser = /* GraphQL */ `
       }
       messageChat {
         id
+        name
+        image
         Messages {
           nextToken
           startedAt

@@ -9,11 +9,10 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import bg from '../../../assets/images/BG.png';
 import styles from './messageChat.styles';
-import messages from '../../../assets/data/messages.json';
 import Message from '../../components/message/message.component';
 import InputBox from '../../components/inputBox/inputBox.component';
 import { API, graphqlOperation } from 'aws-amplify';
-import { getMessageChat, messageChatUsersByUserId } from '../../graphql/queries';
+import { getMessageChat } from '../../graphql/queries';
 
 type MessageChatByUserID = {
   messageChatUsersByUserId: {
@@ -47,14 +46,7 @@ type MessageChatData = {
   getMessageChat: {
     id: string;
     Messages: {
-      items: {
-        id: string;
-        text: string;
-        createdAt: string;
-        messagechatID: string;
-        userID: string;
-        updatedAt: string;
-      };
+      items: MessageData[];
       nextToken: string;
       startedAt: string;
     };
@@ -83,25 +75,40 @@ type MessageChatData = {
   };
 };
 
+type MessageData = {
+  createdAt: string;
+  id: string;
+  messagechatID: string;
+  text: string;
+  updatedAt: string;
+  userID: string;
+};
+
 const MessageChat = ({ route }) => {
   // const route = useRoute();
   const navigation = useNavigation();
   const messageChatID = route.params.id;
   const [chat, setChat] = useState(null);
+  const [messages, setMessages] = useState<MessageData[]>([]);
 
-  // console.log(route);
+  console.log('message chat');
 
   useEffect(() => {
     const fetchChats = async () => {
-      // const chatData = (await API.graphql(
-      //   graphqlOperation(messageChatUsersByUserId, { userId: route.params.id })
-      // )) as { data: MessageChatByUserID };
-      const chatData = (await API.graphql(
-        graphqlOperation(getMessageChat, { id: messageChatID })
-      )) as { data: MessageChatData };
+      try {
+        // const chatData = (await API.graphql(
+        //   graphqlOperation(messageChatUsersByUserId, { userId: route.params.id })
+        // )) as { data: MessageChatByUserID };
+        const chatData = (await API.graphql(
+          graphqlOperation(getMessageChat, { id: messageChatID })
+        )) as { data: MessageChatData };
 
-      // setChat(chatData.data.messageChatUsersByUserId.items);
-      setChat(chatData.data.getMessageChat);
+        // setChat(chatData.data.messageChatUsersByUserId.items);
+        setChat(chatData.data.getMessageChat);
+        setMessages(chatData.data.getMessageChat.Messages.items);
+      } catch (e) {
+        console.log('messageChat error', e);
+      }
     };
     fetchChats();
   }, []);

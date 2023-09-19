@@ -222,6 +222,8 @@ export const createMessageChat = /* GraphQL */ `
   ) {
     createMessageChat(input: $input, condition: $condition) {
       id
+      name
+      image
       Messages {
         items {
           id
@@ -284,6 +286,8 @@ export const updateMessageChat = /* GraphQL */ `
   ) {
     updateMessageChat(input: $input, condition: $condition) {
       id
+      name
+      image
       Messages {
         items {
           id
@@ -346,6 +350,8 @@ export const deleteMessageChat = /* GraphQL */ `
   ) {
     deleteMessageChat(input: $input, condition: $condition) {
       id
+      name
+      image
       Messages {
         items {
           id
@@ -434,6 +440,8 @@ export const createMessageChatUser = /* GraphQL */ `
       }
       messageChat {
         id
+        name
+        image
         Messages {
           nextToken
           startedAt
@@ -506,6 +514,8 @@ export const updateMessageChatUser = /* GraphQL */ `
       }
       messageChat {
         id
+        name
+        image
         Messages {
           nextToken
           startedAt
@@ -578,6 +588,8 @@ export const deleteMessageChatUser = /* GraphQL */ `
       }
       messageChat {
         id
+        name
+        image
         Messages {
           nextToken
           startedAt

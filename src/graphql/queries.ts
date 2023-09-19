@@ -74,16 +74,18 @@ export const syncMessages = /* GraphQL */ `
     }
   }
 `;
-export const messagesByMessagechatID = /* GraphQL */ `
-  query MessagesByMessagechatID(
+export const listMessagesByMessageChat = /* GraphQL */ `
+  query ListMessagesByMessageChat(
     $messagechatID: ID!
+    $createdAt: ModelStringKeyConditionInput
     $sortDirection: ModelSortDirection
     $filter: ModelMessageFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    messagesByMessagechatID(
+    listMessagesByMessageChat(
       messagechatID: $messagechatID
+      createdAt: $createdAt
       sortDirection: $sortDirection
       filter: $filter
       limit: $limit
@@ -269,6 +271,8 @@ export const getMessageChat = /* GraphQL */ `
   query GetMessageChat($id: ID!) {
     getMessageChat(id: $id) {
       id
+      name
+      image
       Messages {
         items {
           id
@@ -333,6 +337,8 @@ export const listMessageChats = /* GraphQL */ `
     listMessageChats(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
+        name
+        image
         Messages {
           nextToken
           startedAt
@@ -384,6 +390,8 @@ export const syncMessageChats = /* GraphQL */ `
     ) {
       items {
         id
+        name
+        image
         Messages {
           nextToken
           startedAt
@@ -450,6 +458,8 @@ export const getMessageChatUser = /* GraphQL */ `
       }
       messageChat {
         id
+        name
+        image
         Messages {
           nextToken
           startedAt
@@ -518,6 +528,8 @@ export const listMessageChatUsers = /* GraphQL */ `
         }
         messageChat {
           id
+          name
+          image
           createdAt
           updatedAt
           _version
@@ -570,6 +582,8 @@ export const syncMessageChatUsers = /* GraphQL */ `
         }
         messageChat {
           id
+          name
+          image
           createdAt
           updatedAt
           _version
@@ -624,6 +638,8 @@ export const messageChatUsersByUserId = /* GraphQL */ `
         }
         messageChat {
           id
+          name
+          image
           createdAt
           updatedAt
           _version
@@ -678,6 +694,8 @@ export const messageChatUsersByMessageChatId = /* GraphQL */ `
         }
         messageChat {
           id
+          name
+          image
           createdAt
           updatedAt
           _version

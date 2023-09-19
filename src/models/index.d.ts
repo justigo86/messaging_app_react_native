@@ -13,7 +13,7 @@ type EagerMessage = {
   };
   readonly id: string;
   readonly text: string;
-  readonly createdAt?: string | null;
+  readonly createdAt: string;
   readonly messagechatID: string;
   readonly userID: string;
   readonly updatedAt?: string | null;
@@ -26,7 +26,7 @@ type LazyMessage = {
   };
   readonly id: string;
   readonly text: string;
-  readonly createdAt?: string | null;
+  readonly createdAt: string;
   readonly messagechatID: string;
   readonly userID: string;
   readonly updatedAt?: string | null;
@@ -80,6 +80,8 @@ type EagerMessageChat = {
     readOnlyFields: 'createdAt' | 'updatedAt';
   };
   readonly id: string;
+  readonly name?: string | null;
+  readonly image?: string | null;
   readonly Messages?: (Message | null)[] | null;
   readonly Users?: (MessageChatUser | null)[] | null;
   readonly MostRecentMessage?: Message | null;
@@ -94,6 +96,8 @@ type LazyMessageChat = {
     readOnlyFields: 'createdAt' | 'updatedAt';
   };
   readonly id: string;
+  readonly name?: string | null;
+  readonly image?: string | null;
   readonly Messages: AsyncCollection<Message>;
   readonly Users: AsyncCollection<MessageChatUser>;
   readonly MostRecentMessage: AsyncItem<Message | undefined>;

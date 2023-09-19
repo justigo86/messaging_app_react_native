@@ -89,7 +89,7 @@ export type Message = {
   __typename: "Message",
   id: string,
   text: string,
-  createdAt?: string | null,
+  createdAt: string,
   messagechatID: string,
   userID: string,
   updatedAt: string,
@@ -176,6 +176,8 @@ export type MessageChatUser = {
 export type MessageChat = {
   __typename: "MessageChat",
   id: string,
+  name?: string | null,
+  image?: string | null,
   Messages?: ModelMessageConnection | null,
   Users?: ModelMessageChatUserConnection | null,
   MostRecentMessage?: Message | null,
@@ -202,11 +204,15 @@ export type DeleteUserInput = {
 
 export type CreateMessageChatInput = {
   id?: string | null,
+  name?: string | null,
+  image?: string | null,
   _version?: number | null,
   messageChatMostRecentMessageId?: string | null,
 };
 
 export type ModelMessageChatConditionInput = {
+  name?: ModelStringInput | null,
+  image?: ModelStringInput | null,
   and?: Array< ModelMessageChatConditionInput | null > | null,
   or?: Array< ModelMessageChatConditionInput | null > | null,
   not?: ModelMessageChatConditionInput | null,
@@ -216,6 +222,8 @@ export type ModelMessageChatConditionInput = {
 
 export type UpdateMessageChatInput = {
   id: string,
+  name?: string | null,
+  image?: string | null,
   _version?: number | null,
   messageChatMostRecentMessageId?: string | null,
 };
@@ -265,6 +273,16 @@ export type ModelMessageFilterInput = {
   _deleted?: ModelBooleanInput | null,
 };
 
+export type ModelStringKeyConditionInput = {
+  eq?: string | null,
+  le?: string | null,
+  lt?: string | null,
+  ge?: string | null,
+  gt?: string | null,
+  between?: Array< string | null > | null,
+  beginsWith?: string | null,
+};
+
 export enum ModelSortDirection {
   ASC = "ASC",
   DESC = "DESC",
@@ -291,6 +309,8 @@ export type ModelUserConnection = {
 
 export type ModelMessageChatFilterInput = {
   id?: ModelIDInput | null,
+  name?: ModelStringInput | null,
+  image?: ModelStringInput | null,
   and?: Array< ModelMessageChatFilterInput | null > | null,
   or?: Array< ModelMessageChatFilterInput | null > | null,
   not?: ModelMessageChatFilterInput | null,
@@ -368,6 +388,8 @@ export type ModelSubscriptionUserFilterInput = {
 
 export type ModelSubscriptionMessageChatFilterInput = {
   id?: ModelSubscriptionIDInput | null,
+  name?: ModelSubscriptionStringInput | null,
+  image?: ModelSubscriptionStringInput | null,
   and?: Array< ModelSubscriptionMessageChatFilterInput | null > | null,
   or?: Array< ModelSubscriptionMessageChatFilterInput | null > | null,
   _deleted?: ModelBooleanInput | null,
@@ -392,7 +414,7 @@ export type CreateMessageMutation = {
     __typename: "Message",
     id: string,
     text: string,
-    createdAt?: string | null,
+    createdAt: string,
     messagechatID: string,
     userID: string,
     updatedAt: string,
@@ -412,7 +434,7 @@ export type UpdateMessageMutation = {
     __typename: "Message",
     id: string,
     text: string,
-    createdAt?: string | null,
+    createdAt: string,
     messagechatID: string,
     userID: string,
     updatedAt: string,
@@ -432,7 +454,7 @@ export type DeleteMessageMutation = {
     __typename: "Message",
     id: string,
     text: string,
-    createdAt?: string | null,
+    createdAt: string,
     messagechatID: string,
     userID: string,
     updatedAt: string,
@@ -460,7 +482,7 @@ export type CreateUserMutation = {
         __typename: "Message",
         id: string,
         text: string,
-        createdAt?: string | null,
+        createdAt: string,
         messagechatID: string,
         userID: string,
         updatedAt: string,
@@ -513,7 +535,7 @@ export type UpdateUserMutation = {
         __typename: "Message",
         id: string,
         text: string,
-        createdAt?: string | null,
+        createdAt: string,
         messagechatID: string,
         userID: string,
         updatedAt: string,
@@ -566,7 +588,7 @@ export type DeleteUserMutation = {
         __typename: "Message",
         id: string,
         text: string,
-        createdAt?: string | null,
+        createdAt: string,
         messagechatID: string,
         userID: string,
         updatedAt: string,
@@ -610,13 +632,15 @@ export type CreateMessageChatMutation = {
   createMessageChat?:  {
     __typename: "MessageChat",
     id: string,
+    name?: string | null,
+    image?: string | null,
     Messages?:  {
       __typename: "ModelMessageConnection",
       items:  Array< {
         __typename: "Message",
         id: string,
         text: string,
-        createdAt?: string | null,
+        createdAt: string,
         messagechatID: string,
         userID: string,
         updatedAt: string,
@@ -647,7 +671,7 @@ export type CreateMessageChatMutation = {
       __typename: "Message",
       id: string,
       text: string,
-      createdAt?: string | null,
+      createdAt: string,
       messagechatID: string,
       userID: string,
       updatedAt: string,
@@ -673,13 +697,15 @@ export type UpdateMessageChatMutation = {
   updateMessageChat?:  {
     __typename: "MessageChat",
     id: string,
+    name?: string | null,
+    image?: string | null,
     Messages?:  {
       __typename: "ModelMessageConnection",
       items:  Array< {
         __typename: "Message",
         id: string,
         text: string,
-        createdAt?: string | null,
+        createdAt: string,
         messagechatID: string,
         userID: string,
         updatedAt: string,
@@ -710,7 +736,7 @@ export type UpdateMessageChatMutation = {
       __typename: "Message",
       id: string,
       text: string,
-      createdAt?: string | null,
+      createdAt: string,
       messagechatID: string,
       userID: string,
       updatedAt: string,
@@ -736,13 +762,15 @@ export type DeleteMessageChatMutation = {
   deleteMessageChat?:  {
     __typename: "MessageChat",
     id: string,
+    name?: string | null,
+    image?: string | null,
     Messages?:  {
       __typename: "ModelMessageConnection",
       items:  Array< {
         __typename: "Message",
         id: string,
         text: string,
-        createdAt?: string | null,
+        createdAt: string,
         messagechatID: string,
         userID: string,
         updatedAt: string,
@@ -773,7 +801,7 @@ export type DeleteMessageChatMutation = {
       __typename: "Message",
       id: string,
       text: string,
-      createdAt?: string | null,
+      createdAt: string,
       messagechatID: string,
       userID: string,
       updatedAt: string,
@@ -826,6 +854,8 @@ export type CreateMessageChatUserMutation = {
     messageChat:  {
       __typename: "MessageChat",
       id: string,
+      name?: string | null,
+      image?: string | null,
       Messages?:  {
         __typename: "ModelMessageConnection",
         nextToken?: string | null,
@@ -840,7 +870,7 @@ export type CreateMessageChatUserMutation = {
         __typename: "Message",
         id: string,
         text: string,
-        createdAt?: string | null,
+        createdAt: string,
         messagechatID: string,
         userID: string,
         updatedAt: string,
@@ -899,6 +929,8 @@ export type UpdateMessageChatUserMutation = {
     messageChat:  {
       __typename: "MessageChat",
       id: string,
+      name?: string | null,
+      image?: string | null,
       Messages?:  {
         __typename: "ModelMessageConnection",
         nextToken?: string | null,
@@ -913,7 +945,7 @@ export type UpdateMessageChatUserMutation = {
         __typename: "Message",
         id: string,
         text: string,
-        createdAt?: string | null,
+        createdAt: string,
         messagechatID: string,
         userID: string,
         updatedAt: string,
@@ -972,6 +1004,8 @@ export type DeleteMessageChatUserMutation = {
     messageChat:  {
       __typename: "MessageChat",
       id: string,
+      name?: string | null,
+      image?: string | null,
       Messages?:  {
         __typename: "ModelMessageConnection",
         nextToken?: string | null,
@@ -986,7 +1020,7 @@ export type DeleteMessageChatUserMutation = {
         __typename: "Message",
         id: string,
         text: string,
-        createdAt?: string | null,
+        createdAt: string,
         messagechatID: string,
         userID: string,
         updatedAt: string,
@@ -1018,7 +1052,7 @@ export type GetMessageQuery = {
     __typename: "Message",
     id: string,
     text: string,
-    createdAt?: string | null,
+    createdAt: string,
     messagechatID: string,
     userID: string,
     updatedAt: string,
@@ -1041,7 +1075,7 @@ export type ListMessagesQuery = {
       __typename: "Message",
       id: string,
       text: string,
-      createdAt?: string | null,
+      createdAt: string,
       messagechatID: string,
       userID: string,
       updatedAt: string,
@@ -1068,7 +1102,7 @@ export type SyncMessagesQuery = {
       __typename: "Message",
       id: string,
       text: string,
-      createdAt?: string | null,
+      createdAt: string,
       messagechatID: string,
       userID: string,
       updatedAt: string,
@@ -1081,22 +1115,23 @@ export type SyncMessagesQuery = {
   } | null,
 };
 
-export type MessagesByMessagechatIDQueryVariables = {
+export type ListMessagesByMessageChatQueryVariables = {
   messagechatID: string,
+  createdAt?: ModelStringKeyConditionInput | null,
   sortDirection?: ModelSortDirection | null,
   filter?: ModelMessageFilterInput | null,
   limit?: number | null,
   nextToken?: string | null,
 };
 
-export type MessagesByMessagechatIDQuery = {
-  messagesByMessagechatID?:  {
+export type ListMessagesByMessageChatQuery = {
+  listMessagesByMessageChat?:  {
     __typename: "ModelMessageConnection",
     items:  Array< {
       __typename: "Message",
       id: string,
       text: string,
-      createdAt?: string | null,
+      createdAt: string,
       messagechatID: string,
       userID: string,
       updatedAt: string,
@@ -1124,7 +1159,7 @@ export type MessagesByUserIDQuery = {
       __typename: "Message",
       id: string,
       text: string,
-      createdAt?: string | null,
+      createdAt: string,
       messagechatID: string,
       userID: string,
       updatedAt: string,
@@ -1154,7 +1189,7 @@ export type GetUserQuery = {
         __typename: "Message",
         id: string,
         text: string,
-        createdAt?: string | null,
+        createdAt: string,
         messagechatID: string,
         userID: string,
         updatedAt: string,
@@ -1270,13 +1305,15 @@ export type GetMessageChatQuery = {
   getMessageChat?:  {
     __typename: "MessageChat",
     id: string,
+    name?: string | null,
+    image?: string | null,
     Messages?:  {
       __typename: "ModelMessageConnection",
       items:  Array< {
         __typename: "Message",
         id: string,
         text: string,
-        createdAt?: string | null,
+        createdAt: string,
         messagechatID: string,
         userID: string,
         updatedAt: string,
@@ -1307,7 +1344,7 @@ export type GetMessageChatQuery = {
       __typename: "Message",
       id: string,
       text: string,
-      createdAt?: string | null,
+      createdAt: string,
       messagechatID: string,
       userID: string,
       updatedAt: string,
@@ -1336,6 +1373,8 @@ export type ListMessageChatsQuery = {
     items:  Array< {
       __typename: "MessageChat",
       id: string,
+      name?: string | null,
+      image?: string | null,
       Messages?:  {
         __typename: "ModelMessageConnection",
         nextToken?: string | null,
@@ -1350,7 +1389,7 @@ export type ListMessageChatsQuery = {
         __typename: "Message",
         id: string,
         text: string,
-        createdAt?: string | null,
+        createdAt: string,
         messagechatID: string,
         userID: string,
         updatedAt: string,
@@ -1383,6 +1422,8 @@ export type SyncMessageChatsQuery = {
     items:  Array< {
       __typename: "MessageChat",
       id: string,
+      name?: string | null,
+      image?: string | null,
       Messages?:  {
         __typename: "ModelMessageConnection",
         nextToken?: string | null,
@@ -1397,7 +1438,7 @@ export type SyncMessageChatsQuery = {
         __typename: "Message",
         id: string,
         text: string,
-        createdAt?: string | null,
+        createdAt: string,
         messagechatID: string,
         userID: string,
         updatedAt: string,
@@ -1452,6 +1493,8 @@ export type GetMessageChatUserQuery = {
     messageChat:  {
       __typename: "MessageChat",
       id: string,
+      name?: string | null,
+      image?: string | null,
       Messages?:  {
         __typename: "ModelMessageConnection",
         nextToken?: string | null,
@@ -1466,7 +1509,7 @@ export type GetMessageChatUserQuery = {
         __typename: "Message",
         id: string,
         text: string,
-        createdAt?: string | null,
+        createdAt: string,
         messagechatID: string,
         userID: string,
         updatedAt: string,
@@ -1518,6 +1561,8 @@ export type ListMessageChatUsersQuery = {
       messageChat:  {
         __typename: "MessageChat",
         id: string,
+        name?: string | null,
+        image?: string | null,
         createdAt: string,
         updatedAt: string,
         _version: number,
@@ -1566,6 +1611,8 @@ export type SyncMessageChatUsersQuery = {
       messageChat:  {
         __typename: "MessageChat",
         id: string,
+        name?: string | null,
+        image?: string | null,
         createdAt: string,
         updatedAt: string,
         _version: number,
@@ -1615,6 +1662,8 @@ export type MessageChatUsersByUserIdQuery = {
       messageChat:  {
         __typename: "MessageChat",
         id: string,
+        name?: string | null,
+        image?: string | null,
         createdAt: string,
         updatedAt: string,
         _version: number,
@@ -1664,6 +1713,8 @@ export type MessageChatUsersByMessageChatIdQuery = {
       messageChat:  {
         __typename: "MessageChat",
         id: string,
+        name?: string | null,
+        image?: string | null,
         createdAt: string,
         updatedAt: string,
         _version: number,
@@ -1691,7 +1742,7 @@ export type OnCreateMessageSubscription = {
     __typename: "Message",
     id: string,
     text: string,
-    createdAt?: string | null,
+    createdAt: string,
     messagechatID: string,
     userID: string,
     updatedAt: string,
@@ -1710,7 +1761,7 @@ export type OnUpdateMessageSubscription = {
     __typename: "Message",
     id: string,
     text: string,
-    createdAt?: string | null,
+    createdAt: string,
     messagechatID: string,
     userID: string,
     updatedAt: string,
@@ -1729,7 +1780,7 @@ export type OnDeleteMessageSubscription = {
     __typename: "Message",
     id: string,
     text: string,
-    createdAt?: string | null,
+    createdAt: string,
     messagechatID: string,
     userID: string,
     updatedAt: string,
@@ -1756,7 +1807,7 @@ export type OnCreateUserSubscription = {
         __typename: "Message",
         id: string,
         text: string,
-        createdAt?: string | null,
+        createdAt: string,
         messagechatID: string,
         userID: string,
         updatedAt: string,
@@ -1808,7 +1859,7 @@ export type OnUpdateUserSubscription = {
         __typename: "Message",
         id: string,
         text: string,
-        createdAt?: string | null,
+        createdAt: string,
         messagechatID: string,
         userID: string,
         updatedAt: string,
@@ -1860,7 +1911,7 @@ export type OnDeleteUserSubscription = {
         __typename: "Message",
         id: string,
         text: string,
-        createdAt?: string | null,
+        createdAt: string,
         messagechatID: string,
         userID: string,
         updatedAt: string,
@@ -1903,13 +1954,15 @@ export type OnCreateMessageChatSubscription = {
   onCreateMessageChat?:  {
     __typename: "MessageChat",
     id: string,
+    name?: string | null,
+    image?: string | null,
     Messages?:  {
       __typename: "ModelMessageConnection",
       items:  Array< {
         __typename: "Message",
         id: string,
         text: string,
-        createdAt?: string | null,
+        createdAt: string,
         messagechatID: string,
         userID: string,
         updatedAt: string,
@@ -1940,7 +1993,7 @@ export type OnCreateMessageChatSubscription = {
       __typename: "Message",
       id: string,
       text: string,
-      createdAt?: string | null,
+      createdAt: string,
       messagechatID: string,
       userID: string,
       updatedAt: string,
@@ -1965,13 +2018,15 @@ export type OnUpdateMessageChatSubscription = {
   onUpdateMessageChat?:  {
     __typename: "MessageChat",
     id: string,
+    name?: string | null,
+    image?: string | null,
     Messages?:  {
       __typename: "ModelMessageConnection",
       items:  Array< {
         __typename: "Message",
         id: string,
         text: string,
-        createdAt?: string | null,
+        createdAt: string,
         messagechatID: string,
         userID: string,
         updatedAt: string,
@@ -2002,7 +2057,7 @@ export type OnUpdateMessageChatSubscription = {
       __typename: "Message",
       id: string,
       text: string,
-      createdAt?: string | null,
+      createdAt: string,
       messagechatID: string,
       userID: string,
       updatedAt: string,
@@ -2027,13 +2082,15 @@ export type OnDeleteMessageChatSubscription = {
   onDeleteMessageChat?:  {
     __typename: "MessageChat",
     id: string,
+    name?: string | null,
+    image?: string | null,
     Messages?:  {
       __typename: "ModelMessageConnection",
       items:  Array< {
         __typename: "Message",
         id: string,
         text: string,
-        createdAt?: string | null,
+        createdAt: string,
         messagechatID: string,
         userID: string,
         updatedAt: string,
@@ -2064,7 +2121,7 @@ export type OnDeleteMessageChatSubscription = {
       __typename: "Message",
       id: string,
       text: string,
-      createdAt?: string | null,
+      createdAt: string,
       messagechatID: string,
       userID: string,
       updatedAt: string,
@@ -2116,6 +2173,8 @@ export type OnCreateMessageChatUserSubscription = {
     messageChat:  {
       __typename: "MessageChat",
       id: string,
+      name?: string | null,
+      image?: string | null,
       Messages?:  {
         __typename: "ModelMessageConnection",
         nextToken?: string | null,
@@ -2130,7 +2189,7 @@ export type OnCreateMessageChatUserSubscription = {
         __typename: "Message",
         id: string,
         text: string,
-        createdAt?: string | null,
+        createdAt: string,
         messagechatID: string,
         userID: string,
         updatedAt: string,
@@ -2188,6 +2247,8 @@ export type OnUpdateMessageChatUserSubscription = {
     messageChat:  {
       __typename: "MessageChat",
       id: string,
+      name?: string | null,
+      image?: string | null,
       Messages?:  {
         __typename: "ModelMessageConnection",
         nextToken?: string | null,
@@ -2202,7 +2263,7 @@ export type OnUpdateMessageChatUserSubscription = {
         __typename: "Message",
         id: string,
         text: string,
-        createdAt?: string | null,
+        createdAt: string,
         messagechatID: string,
         userID: string,
         updatedAt: string,
@@ -2260,6 +2321,8 @@ export type OnDeleteMessageChatUserSubscription = {
     messageChat:  {
       __typename: "MessageChat",
       id: string,
+      name?: string | null,
+      image?: string | null,
       Messages?:  {
         __typename: "ModelMessageConnection",
         nextToken?: string | null,
@@ -2274,7 +2337,7 @@ export type OnDeleteMessageChatUserSubscription = {
         __typename: "Message",
         id: string,
         text: string,
-        createdAt?: string | null,
+        createdAt: string,
         messagechatID: string,
         userID: string,
         updatedAt: string,

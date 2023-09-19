@@ -70,7 +70,7 @@ const MessageFeed = () => {
 
         // console.log(userData.data.getUser.messagechats.items[0].messageChat);
       } catch (e) {
-        console.log(e, 'messageFeed error');
+        console.log('messageFeed error', e);
       }
     };
     fetchMessageChats();

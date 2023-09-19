@@ -20,8 +20,8 @@ export const schema = {
                 "createdAt": {
                     "name": "createdAt",
                     "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
+                    "type": "AWSDateTime",
+                    "isRequired": true,
                     "attributes": []
                 },
                 "messagechatID": {
@@ -58,8 +58,10 @@ export const schema = {
                     "type": "key",
                     "properties": {
                         "name": "byMessageChat",
+                        "queryField": "listMessagesByMessageChat",
                         "fields": [
-                            "messagechatID"
+                            "messagechatID",
+                            "createdAt"
                         ]
                     }
                 },
@@ -203,6 +205,20 @@ export const schema = {
                     "isArray": false,
                     "type": "ID",
                     "isRequired": true,
+                    "attributes": []
+                },
+                "name": {
+                    "name": "name",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "image": {
+                    "name": "image",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
                     "attributes": []
                 },
                 "Messages": {
@@ -406,5 +422,5 @@ export const schema = {
     "enums": {},
     "nonModels": {},
     "codegenVersion": "3.4.4",
-    "version": "2cdcced55706a863ce940a3ee665d5c7"
+    "version": "07759f126392fe265d62cea8bff6d16a"
 };
