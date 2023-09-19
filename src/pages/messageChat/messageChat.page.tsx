@@ -12,7 +12,7 @@ import styles from './messageChat.styles';
 import Message from '../../components/message/message.component';
 import InputBox from '../../components/inputBox/inputBox.component';
 import { API, graphqlOperation } from 'aws-amplify';
-import { getMessageChat } from '../../graphql/queries';
+import { getMessageChat, listMessagesByMessageChat } from '../../graphql/queries';
 
 type MessageChatByUserID = {
   messageChatUsersByUserId: {
@@ -84,6 +84,23 @@ type MessageData = {
   userID: string;
 };
 
+type MessageDataByMessageChat = {
+  listMessagesByMessageChat: {
+    items: [
+      {
+        id: string;
+        text: string;
+        createdAt: string;
+        messagechatID: string;
+        userID: string;
+        updatedAt: string;
+      },
+    ];
+    nextToken: string;
+    startedAt: string;
+  };
+};
+
 const MessageChat = ({ route }) => {
   // const route = useRoute();
   const navigation = useNavigation();
@@ -91,8 +108,7 @@ const MessageChat = ({ route }) => {
   const [chat, setChat] = useState(null);
   const [messages, setMessages] = useState<MessageData[]>([]);
 
-  console.log('message chat');
-
+  //to fetch chat
   useEffect(() => {
     const fetchChats = async () => {
       try {
@@ -104,14 +120,32 @@ const MessageChat = ({ route }) => {
         )) as { data: MessageChatData };
 
         // setChat(chatData.data.messageChatUsersByUserId.items);
-        setChat(chatData.data.getMessageChat);
-        setMessages(chatData.data.getMessageChat.Messages.items);
+        setChat(chatData.data?.getMessageChat);
       } catch (e) {
-        console.log('messageChat error', e);
+        console.log('fetch chat error', e);
       }
     };
     fetchChats();
   }, []);
+
+  //to fetch chat messages
+  useEffect(() => {
+    const fetchChatMessages = async () => {
+      try {
+        const chatMessagesData = (await API.graphql(
+          graphqlOperation(listMessagesByMessageChat, {
+            messagechatID: messageChatID,
+            sortDirection: 'DESC',
+          })
+        )) as { data: MessageDataByMessageChat };
+
+        setMessages(chatMessagesData.data?.listMessagesByMessageChat?.items);
+      } catch (e) {
+        console.log('fetch messages error', e);
+      }
+    };
+    fetchChatMessages();
+  }, [messageChatID]);
 
   useEffect(() => {
     navigation.setOptions({ title: route.params.name });

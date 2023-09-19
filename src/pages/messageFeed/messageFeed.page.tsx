@@ -22,6 +22,8 @@ import { getUser } from './queries';
 type MessageChatData = {
   messageChat: {
     id: string;
+    createdAt: string;
+    updatedAt: string;
     Users: {
       items: {
         id: string;
@@ -56,6 +58,7 @@ const MessageFeed = () => {
   const [messageChats, setMessageChats] = useState<MessageChatData[]>([]);
 
   useEffect(() => {
+    console.log('message feed');
     const fetchMessageChats = async () => {
       try {
         const authUser = await Auth.currentAuthenticatedUser();
@@ -63,8 +66,14 @@ const MessageFeed = () => {
         const userData = (await API.graphql(
           graphqlOperation(getUser, { id: authUser.attributes.sub })
         )) as { data: GetUserData };
-        //)) as GraphQLResult<GetUserData>;
-        // console.log('message feed');
+
+        console.log(userData);
+
+        const chats = userData.data?.getUser?.messagechats?.items || [];
+        console.log(chats[0].messageChat);
+        // const chatSort = chats.sort((chat1, chat2) => {
+        //   new Date(chat2?.messageChat.updatedAt) - new Date(chat1?.messageChat.updatedAt)
+        // });
 
         setMessageChats(userData.data.getUser.messagechats.items);
 
