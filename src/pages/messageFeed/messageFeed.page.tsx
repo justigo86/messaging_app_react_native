@@ -70,10 +70,15 @@ const MessageFeed = () => {
         console.log(userData);
 
         const chats = userData.data?.getUser?.messagechats?.items || [];
-        console.log(chats[0].messageChat);
-        // const chatSort = chats.sort((chat1, chat2) => {
-        //   new Date(chat2?.messageChat.updatedAt) - new Date(chat1?.messageChat.updatedAt)
-        // });
+        // console.log(typeof chats[0].messageChat.createdAt.valueOf());
+        // console.log(chats);
+        const chatSort = chats.sort((chat1, chat2) => {
+          return (
+            new Date(chat2?.messageChat.updatedAt).valueOf() -
+            new Date(chat1?.messageChat.updatedAt).valueOf()
+          );
+        });
+        console.log(chatSort);
 
         setMessageChats(userData.data.getUser.messagechats.items);
 
