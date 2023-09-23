@@ -13,6 +13,9 @@ import Message from '../../components/message/message.component';
 import InputBox from '../../components/inputBox/inputBox.component';
 import { API, graphqlOperation } from 'aws-amplify';
 import { getMessageChat, listMessagesByMessageChat } from '../../graphql/queries';
+import { onCreateMessage } from '../../graphql/subscriptions';
+import { Observable, from } from 'rxjs';
+import { GraphQLSubscription } from '@aws-amplify/api';
 
 type MessageChatByUserID = {
   messageChatUsersByUserId: {
@@ -101,6 +104,15 @@ type MessageDataByMessageChat = {
   };
 };
 
+type OnCreateMessageSubscription = {
+  id: string;
+  text: string;
+  createdAt: string;
+  messagechatID: string;
+  userID: string;
+  updatedAt: string;
+};
+
 const MessageChat = ({ route }) => {
   // const route = useRoute();
   const navigation = useNavigation();
@@ -145,6 +157,18 @@ const MessageChat = ({ route }) => {
       }
     };
     fetchChatMessages();
+
+    //subscribe to messageChat updates
+    const messageSubscription = API.graphql<GraphQLSubscription<OnCreateMessageSubscription>>(
+      graphqlOperation(onCreateMessage)
+    ) as unknown as Observable<any>;
+
+    messageSubscription.subscribe({
+      next: ({ data }) => {
+        setMessages((res) => [data.data.onCreateMessage, ...res]);
+      },
+      error: (err) => console.log('message subscription', err),
+    });
   }, [messageChatID]);
 
   useEffect(() => {

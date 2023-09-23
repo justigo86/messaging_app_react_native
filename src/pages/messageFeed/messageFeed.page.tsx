@@ -67,18 +67,13 @@ const MessageFeed = () => {
           graphqlOperation(getUser, { id: authUser.attributes.sub })
         )) as { data: GetUserData };
 
-        console.log(userData);
-
         const chats = userData.data?.getUser?.messagechats?.items || [];
-        // console.log(typeof chats[0].messageChat.createdAt.valueOf());
-        // console.log(chats);
         const chatSort = chats.sort((chat1, chat2) => {
           return (
             new Date(chat2?.messageChat.updatedAt).valueOf() -
             new Date(chat1?.messageChat.updatedAt).valueOf()
           );
         });
-        console.log(chatSort);
 
         setMessageChats(userData.data.getUser.messagechats.items);
 
