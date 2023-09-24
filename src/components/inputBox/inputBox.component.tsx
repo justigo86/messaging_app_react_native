@@ -25,7 +25,7 @@ const InputBox = ({ chat }) => {
   const [newMessage, setNewMessage] = useState('');
   const onMessageSend = async () => {
     try {
-      console.warn('Sending message:', newMessage);
+      // console.warn('Sending message:', newMessage);
       const authUser = await Auth.currentAuthenticatedUser();
 
       const newMessageData = {

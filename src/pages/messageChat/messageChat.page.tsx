@@ -142,39 +142,40 @@ const MessageChat = ({ route }) => {
   }, []);
 
   //to fetch chat messages
+  const fetchChatMessages = async () => {
+    const chatMessagesData = (await API.graphql(
+      graphqlOperation(listMessagesByMessageChat, {
+        messagechatID: messageChatID,
+        sortDirection: 'DESC',
+      })
+    )) as { data: MessageDataByMessageChat };
+
+    setMessages(chatMessagesData.data?.listMessagesByMessageChat?.items);
+  };
+
   useEffect(() => {
-    const fetchChatMessages = async () => {
-      try {
-        const chatMessagesData = (await API.graphql(
-          graphqlOperation(listMessagesByMessageChat, {
-            messagechatID: messageChatID,
-            sortDirection: 'DESC',
-          })
-        )) as { data: MessageDataByMessageChat };
-
-        setMessages(chatMessagesData.data?.listMessagesByMessageChat?.items);
-      } catch (e) {
-        console.log('fetch messages error', e);
-      }
-    };
     fetchChatMessages();
+  }, [messageChatID]);
 
+  useEffect(() => {
     //subscribe to messageChat updates - first create Observable
     const messageObservable = API.graphql<GraphQLSubscription<OnCreateMessageSubscription>>(
-      graphqlOperation(onCreateMessage)
+      graphqlOperation(onCreateMessage, { filter: { messagechatID: { eq: messageChatID } } })
     ) as unknown as Observable<any>;
 
     //then add Subscription by subscribing to Observable
     const messageSubscription = messageObservable.subscribe({
-      next: ({ data }) => {
-        setMessages((existingMessages) => [data.data.onCreateMessage, ...existingMessages]);
+      next: ({ newMessage }) => {
+        console.log('new message', newMessage);
+        // setMessages((existingMessages) => [newMessage.data.onCreateMessage, ...existingMessages]);
+        fetchChatMessages();
       },
       error: (err) => console.log('message subscription', err),
     });
 
     //unsubscribe to prevent memory leak
     return () => messageSubscription.unsubscribe();
-  }, [messageChatID]);
+  }, []);
 
   useEffect(() => {
     navigation.setOptions({ title: route.params.name });
