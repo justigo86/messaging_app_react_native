@@ -14,7 +14,7 @@ import InputBox from '../../components/inputBox/inputBox.component';
 import { API, graphqlOperation } from 'aws-amplify';
 import { getMessageChat, listMessagesByMessageChat } from '../../graphql/queries';
 import { onCreateMessage } from '../../graphql/subscriptions';
-import { Observable, from } from 'rxjs';
+import { Observable } from 'rxjs';
 import { GraphQLSubscription } from '@aws-amplify/api';
 
 type MessageChatByUserID = {
@@ -122,6 +122,7 @@ const MessageChat = ({ route }) => {
 
   //to fetch chat
   useEffect(() => {
+    console.log('messageChat');
     const fetchChats = async () => {
       try {
         // const chatData = (await API.graphql(
@@ -158,17 +159,21 @@ const MessageChat = ({ route }) => {
     };
     fetchChatMessages();
 
-    //subscribe to messageChat updates
-    const messageSubscription = API.graphql<GraphQLSubscription<OnCreateMessageSubscription>>(
+    //subscribe to messageChat updates - first create Observable
+    const messageObservable = API.graphql<GraphQLSubscription<OnCreateMessageSubscription>>(
       graphqlOperation(onCreateMessage)
     ) as unknown as Observable<any>;
 
-    messageSubscription.subscribe({
+    //then add Subscription by subscribing to Observable
+    const messageSubscription = messageObservable.subscribe({
       next: ({ data }) => {
-        setMessages((res) => [data.data.onCreateMessage, ...res]);
+        setMessages((existingMessages) => [data.data.onCreateMessage, ...existingMessages]);
       },
       error: (err) => console.log('message subscription', err),
     });
+
+    //unsubscribe to prevent memory leak
+    return () => messageSubscription.unsubscribe();
   }, [messageChatID]);
 
   useEffect(() => {
@@ -187,7 +192,7 @@ const MessageChat = ({ route }) => {
     >
       <ImageBackground source={bg} style={styles.bg}>
         <FlatList
-          data={chat.Messages.items}
+          data={messages}
           renderItem={({ item }) => <Message message={item} />}
           style={styles.list}
           inverted

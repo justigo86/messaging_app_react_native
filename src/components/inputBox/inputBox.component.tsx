@@ -37,7 +37,7 @@ const InputBox = ({ chat }) => {
       const createNewMessage = (await API.graphql(
         graphqlOperation(createMessage, { input: newMessageData })
       )) as { data: NewMessageData };
-      console.log(createNewMessage);
+      console.log('created message', createNewMessage);
 
       setNewMessage('');
 

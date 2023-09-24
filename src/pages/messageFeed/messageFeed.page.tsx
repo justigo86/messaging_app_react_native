@@ -58,7 +58,7 @@ const MessageFeed = () => {
   const [messageChats, setMessageChats] = useState<MessageChatData[]>([]);
 
   useEffect(() => {
-    console.log('message feed');
+    console.log('messageFeed');
     const fetchMessageChats = async () => {
       try {
         const authUser = await Auth.currentAuthenticatedUser();

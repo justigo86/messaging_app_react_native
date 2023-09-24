@@ -140,6 +140,7 @@ const Contacts = () => {
   // const navigation = useNavigation<ContactPageProp>();
 
   useEffect(() => {
+    console.log('contacts');
     const fetchUsers = async () => {
       try {
         //graphql API module - that uses graphqlOperation (async) to query users
