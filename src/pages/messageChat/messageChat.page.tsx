@@ -13,7 +13,7 @@ import Message from '../../components/message/message.component';
 import InputBox from '../../components/inputBox/inputBox.component';
 import { API, graphqlOperation } from 'aws-amplify';
 import { getMessageChat, listMessagesByMessageChat } from '../../graphql/queries';
-import { onCreateMessage } from '../../graphql/subscriptions';
+import { onCreateMessage, onUpdateMessageChat } from '../../graphql/subscriptions';
 import { Observable } from 'rxjs';
 import { GraphQLSubscription } from '@aws-amplify/api';
 
@@ -113,6 +113,45 @@ type OnCreateMessageSubscription = {
   updatedAt: string;
 };
 
+type OnUpdateMessageChatSubscription = {
+  id: string;
+  name: string;
+  image: string;
+  Messages: {
+    items: {
+      id: string;
+      text: string;
+      createdAt: string;
+      messagechatID: string;
+      userID: string;
+      updatedAt: string;
+    };
+    nextToken: string;
+    startedAt: string;
+  };
+  Users: {
+    items: {
+      id: string;
+      userId: string;
+      messageChatId: string;
+      createdAt: string;
+      updatedAt: string;
+    };
+    nextToken: string;
+    startedAt: string;
+  };
+  MostRecentMessage: {
+    id: string;
+    text: string;
+    createdAt: string;
+    messagechatID: string;
+    userID: string;
+    updatedAt: string;
+  };
+  createdAt: string;
+  updatedAt: string;
+};
+
 const MessageChat = ({ route }) => {
   // const route = useRoute();
   const navigation = useNavigation();
@@ -120,26 +159,45 @@ const MessageChat = ({ route }) => {
   const [chat, setChat] = useState(null);
   const [messages, setMessages] = useState<MessageData[]>([]);
 
+  const fetchChats = async () => {
+    try {
+      // const chatData = (await API.graphql(
+      //   graphqlOperation(messageChatUsersByUserId, { userId: route.params.id })
+      // )) as { data: MessageChatByUserID };
+      const chatData = (await API.graphql(
+        graphqlOperation(getMessageChat, { id: messageChatID })
+      )) as { data: MessageChatData };
+
+      // setChat(chatData.data.messageChatUsersByUserId.items);
+      setChat(chatData.data?.getMessageChat);
+    } catch (e) {
+      console.log('fetch chat error', e);
+    }
+  };
+
   //to fetch chat
   useEffect(() => {
     console.log('messageChat');
-    const fetchChats = async () => {
-      try {
-        // const chatData = (await API.graphql(
-        //   graphqlOperation(messageChatUsersByUserId, { userId: route.params.id })
-        // )) as { data: MessageChatByUserID };
-        const chatData = (await API.graphql(
-          graphqlOperation(getMessageChat, { id: messageChatID })
-        )) as { data: MessageChatData };
-
-        // setChat(chatData.data.messageChatUsersByUserId.items);
-        setChat(chatData.data?.getMessageChat);
-      } catch (e) {
-        console.log('fetch chat error', e);
-      }
-    };
     fetchChats();
-  }, []);
+  }, [messageChatID]);
+
+  useEffect(() => {
+    const updateSubscription = (
+      API.graphql<GraphQLSubscription<OnUpdateMessageChatSubscription>>(
+        graphqlOperation(onUpdateMessageChat, { filter: { id: { eq: messageChatID } } })
+      ) as unknown as Observable<any>
+    ).subscribe({
+      next: (data) => {
+        console.log('update subscription', data.value.data);
+        setChat((chatData) => {
+          ({ ...(chatData || {}), ...data.value.data.onUpdateMessageChat });
+        });
+      },
+      error: (err) => console.log('update subscription', err),
+    });
+
+    return () => updateSubscription.unsubscribe();
+  }, [messageChatID]);
 
   //to fetch chat messages
   const fetchChatMessages = async () => {
@@ -159,16 +217,16 @@ const MessageChat = ({ route }) => {
 
   useEffect(() => {
     //subscribe to messageChat updates - first create Observable
-    const messageObservable = API.graphql<GraphQLSubscription<OnCreateMessageSubscription>>(
-      graphqlOperation(onCreateMessage, { filter: { messagechatID: { eq: messageChatID } } })
-    ) as unknown as Observable<any>;
-
-    //then add Subscription by subscribing to Observable
-    const messageSubscription = messageObservable.subscribe({
-      next: ({ newMessage }) => {
-        console.log('new message', newMessage);
-        // setMessages((existingMessages) => [newMessage.data.onCreateMessage, ...existingMessages]);
-        fetchChatMessages();
+    const messageSubscription = (
+      API.graphql<GraphQLSubscription<OnCreateMessageSubscription>>(
+        graphqlOperation(onCreateMessage, { filter: { messagechatID: { eq: messageChatID } } })
+        //filtering on equal ("eq") to messageChatID
+      ) as unknown as Observable<any>
+    ).subscribe({
+      next: (data) => {
+        // console.log('new message', data.value.data.onCreateMessage);
+        setMessages((existingMessages) => [data.value.data.onCreateMessage, ...existingMessages]);
+        // fetchChatMessages();
       },
       error: (err) => console.log('message subscription', err),
     });

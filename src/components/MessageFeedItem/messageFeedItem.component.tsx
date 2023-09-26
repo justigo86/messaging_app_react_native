@@ -18,6 +18,7 @@ export type MessageFeedParamList = {
 
 const MessageFeedItem = ({ chat, navigation }) => {
   const [otherUser, setOtherUser] = useState(null);
+  const [messageChat, setMessageChat] = useState(chat);
   // const navigation = useNavigation();
 
   // console.log(chat);
@@ -28,10 +29,10 @@ const MessageFeedItem = ({ chat, navigation }) => {
       // const userItem = chat.Users.items[0].find((item) => {
       //   item.user.id !== authUser.attributes.sub;
       // });
-      if (chat.Users.items[0].user.id === authUser.attributes.sub) {
-        setOtherUser(chat.Users.items[1].user);
+      if (messageChat.Users.items[0].user.id === authUser.attributes.sub) {
+        setOtherUser(messageChat.Users.items[1].user);
       } else {
-        setOtherUser(chat.Users.items[0].user);
+        setOtherUser(messageChat.Users.items[0].user);
       }
       // setOtherUser(userItem?.user);
     };
@@ -40,7 +41,7 @@ const MessageFeedItem = ({ chat, navigation }) => {
 
   const onClick = () => {
     navigation.navigate('Chat', {
-      id: chat.id,
+      id: messageChat.id,
       // name: chat.user?.name,
       name: otherUser?.name,
     });
@@ -57,11 +58,13 @@ const MessageFeedItem = ({ chat, navigation }) => {
           <Text style={styles.username} numberOfLines={1}>
             {otherUser?.name}
           </Text>
-          <Text style={styles.time}>{dayjs(chat.MostRecentMessage?.createdAt).fromNow(true)}</Text>
+          <Text style={styles.time}>
+            {dayjs(messageChat.MostRecentMessage?.createdAt).fromNow(true)}
+          </Text>
           {/* wrapped created time in dayjs for relative time to local - .fromNow(true) removes "ago" */}
         </View>
         <Text style={styles.messageText} numberOfLines={2}>
-          {chat.MostRecentMessage?.text}
+          {messageChat.MostRecentMessage?.text}
         </Text>
       </View>
     </Pressable>

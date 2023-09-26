@@ -56,32 +56,36 @@ type GetUserData = {
 const MessageFeed = () => {
   const navigation = useNavigation();
   const [messageChats, setMessageChats] = useState<MessageChatData[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  const fetchMessageChats = async () => {
+    setLoading(true);
+    try {
+      const authUser = await Auth.currentAuthenticatedUser();
+
+      const userData = (await API.graphql(
+        graphqlOperation(getUser, { id: authUser.attributes.sub })
+      )) as { data: GetUserData };
+
+      const chats = userData.data?.getUser?.messagechats?.items || [];
+      const chatSort = chats.sort((chat1, chat2) => {
+        return (
+          new Date(chat2?.messageChat.updatedAt).valueOf() -
+          new Date(chat1?.messageChat.updatedAt).valueOf()
+        );
+      });
+
+      setMessageChats(userData.data.getUser.messagechats.items);
+
+      // console.log(userData.data.getUser.messagechats.items[0].messageChat);
+    } catch (e) {
+      console.log('messageFeed error', e);
+    }
+    setLoading(false);
+  };
 
   useEffect(() => {
     console.log('messageFeed');
-    const fetchMessageChats = async () => {
-      try {
-        const authUser = await Auth.currentAuthenticatedUser();
-
-        const userData = (await API.graphql(
-          graphqlOperation(getUser, { id: authUser.attributes.sub })
-        )) as { data: GetUserData };
-
-        const chats = userData.data?.getUser?.messagechats?.items || [];
-        const chatSort = chats.sort((chat1, chat2) => {
-          return (
-            new Date(chat2?.messageChat.updatedAt).valueOf() -
-            new Date(chat1?.messageChat.updatedAt).valueOf()
-          );
-        });
-
-        setMessageChats(userData.data.getUser.messagechats.items);
-
-        // console.log(userData.data.getUser.messagechats.items[0].messageChat);
-      } catch (e) {
-        console.log('messageFeed error', e);
-      }
-    };
     fetchMessageChats();
   }, []);
 
@@ -93,6 +97,8 @@ const MessageFeed = () => {
         renderItem={({ item }) => (
           <MessageFeedItem navigation={navigation} chat={item.messageChat} />
         )}
+        onRefresh={fetchMessageChats}
+        refreshing={loading}
       />
     </View>
   );
