@@ -188,12 +188,10 @@ const MessageChat = ({ route }) => {
       ) as unknown as Observable<any>
     ).subscribe({
       next: (data) => {
-        console.log('update subscription', data.value.data);
-        setChat((chatData) => {
-          ({ ...(chatData || {}), ...data.value.data.onUpdateMessageChat });
-        });
+        // console.log('chat update subscription', data.value.data);
+        setChat((chatData) => ({ ...(chatData || {}), ...data.value.data.onUpdateMessageChat }));
       },
-      error: (err) => console.log('update subscription', err),
+      error: (err) => console.log('update subscription error', err),
     });
 
     return () => updateSubscription.unsubscribe();
@@ -224,16 +222,17 @@ const MessageChat = ({ route }) => {
       ) as unknown as Observable<any>
     ).subscribe({
       next: (data) => {
-        // console.log('new message', data.value.data.onCreateMessage);
-        setMessages((existingMessages) => [data.value.data.onCreateMessage, ...existingMessages]);
-        // fetchChatMessages();
+        console.log('new message subscription', data.value.data.onCreateMessage);
+        // setMessages((existingMessages) => [data.value.data.onCreateMessage, ...existingMessages]);
+        fetchChatMessages();
       },
-      error: (err) => console.log('message subscription', err),
+      error: (err) => console.log('message subscription error', err),
     });
+    console.log('new message subscription complete');
 
     //unsubscribe to prevent memory leak
     return () => messageSubscription.unsubscribe();
-  }, []);
+  }, [messageChatID]);
 
   useEffect(() => {
     navigation.setOptions({ title: route.params.name });

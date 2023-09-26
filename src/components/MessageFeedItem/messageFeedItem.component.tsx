@@ -3,7 +3,10 @@ import { Text, View, Image, Pressable } from 'react-native';
 import styles from './messageFeedItem.styles';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import { Auth } from 'aws-amplify';
+import { API, Auth, graphqlOperation } from 'aws-amplify';
+import { GraphQLSubscription } from '@aws-amplify/api';
+import { Observable } from 'rxjs';
+import { onUpdateMessageChat } from '../../graphql/subscriptions';
 // import { useNavigation } from '@react-navigation/native';
 
 dayjs.extend(relativeTime);
@@ -14,6 +17,45 @@ export type MessageFeedParamList = {
     id: string;
     name: string;
   };
+};
+
+type OnUpdateMessageChatSubscription = {
+  id: string;
+  name: string;
+  image: string;
+  Messages: {
+    items: {
+      id: string;
+      text: string;
+      createdAt: string;
+      messagechatID: string;
+      userID: string;
+      updatedAt: string;
+    };
+    nextToken: string;
+    startedAt: string;
+  };
+  Users: {
+    items: {
+      id: string;
+      userId: string;
+      messageChatId: string;
+      createdAt: string;
+      updatedAt: string;
+    };
+    nextToken: string;
+    startedAt: string;
+  };
+  MostRecentMessage: {
+    id: string;
+    text: string;
+    createdAt: string;
+    messagechatID: string;
+    userID: string;
+    updatedAt: string;
+  };
+  createdAt: string;
+  updatedAt: string;
 };
 
 const MessageFeedItem = ({ chat, navigation }) => {
@@ -37,7 +79,27 @@ const MessageFeedItem = ({ chat, navigation }) => {
       // setOtherUser(userItem?.user);
     };
     fetchUser();
+    // console.log(chat.id);
   }, []);
+
+  useEffect(() => {
+    const chatSubscription = (
+      API.graphql<GraphQLSubscription<OnUpdateMessageChatSubscription>>(
+        graphqlOperation(onUpdateMessageChat, { filter: { id: { eq: chat.id } } })
+      ) as unknown as Observable<any>
+    ).subscribe({
+      next: (data) => {
+        console.log('update subscription', data.value.data);
+        setMessageChat((chatData) => ({
+          ...(chatData || {}),
+          ...data.value.data.onUpdateMessageChat,
+        }));
+      },
+      error: (err) => console.log('feed update subscription error', err),
+    });
+
+    return () => chatSubscription.unsubscribe();
+  }, [chat.id]);
 
   const onClick = () => {
     navigation.navigate('Chat', {
