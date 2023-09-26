@@ -1,11 +1,13 @@
-import { FlatList } from 'react-native';
+import { FlatList, Pressable, Text } from 'react-native';
 // import chats from '../../../assets/data/chats.json';
 import ContactListItem from '../../components/contactList/contactListItem.component';
 import { useEffect, useState } from 'react';
+import styles from './contacts.styles';
 import { API, graphqlOperation } from 'aws-amplify';
 import { listUsers } from '../../graphql/queries';
 // import { createMessageChat, createMessageChatUser } from '../../graphql/mutations';
 import { GraphQLResult } from '@aws-amplify/api';
+import { MaterialIcons } from '@expo/vector-icons';
 // import { useNavigation } from '@react-navigation/native';
 // import { getUserChat } from '../../services/chatService';
 // import { RootStackParamList } from '../../navigation/navigator.component';
@@ -198,7 +200,13 @@ const Contacts = () => {
       // data={chats} - changed when API incorporated
       data={users}
       renderItem={({ item }) => <ContactListItem user={item} />}
-      style={{ backgroundColor: 'white' }}
+      style={styles.contactList}
+      ListHeaderComponent={() => (
+        <Pressable onPress={() => {}} style={styles.groupList}>
+          <MaterialIcons name="group" size={24} color="royalblue" style={styles.groupIcon} />
+          <Text style={styles.groupText}>New Group</Text>
+        </Pressable>
+      )}
     />
   );
 };
