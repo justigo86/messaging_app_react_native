@@ -8,15 +8,14 @@ import { listUsers } from '../../graphql/queries';
 // import { createMessageChat, createMessageChatUser } from '../../graphql/mutations';
 import { GraphQLResult } from '@aws-amplify/api';
 import { MaterialIcons } from '@expo/vector-icons';
-// import { useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 // import { getUserChat } from '../../services/chatService';
-// import { RootStackParamList } from '../../navigation/navigator.component';
-// import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../../navigation/navigator.component';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 // import { Message, ModelMessageChatUserConnection, ModelMessageConnection } from '../../API';
 
 type UsersData = {
   listUsers: {
-    __typename: string;
     items: [
       {
         id: string;
@@ -26,19 +25,13 @@ type UsersData = {
         Messages: {
           nextToken: string | null;
           startedAt: string | null;
-          __typename: string;
         };
         messagechats: {
           nextToken: string | null;
           startedAt: string | null;
-          __typename: string;
         };
         createdAt: string | null;
         updatedAt: string | null;
-        _version: string;
-        _deleted: string;
-        _lastChangedAt: string;
-        __typename: string;
       },
     ];
     nextToken: null;
@@ -134,12 +127,12 @@ type MessageChatData = {
 //   };
 // };
 
-// type ContactPageProp = NativeStackNavigationProp<RootStackParamList, 'Contacts'>;
+type ContactPageProp = NativeStackNavigationProp<RootStackParamList, 'Contacts'>;
 //needed to set a prop type for useNavigation with Chat params used below
 
 const Contacts = () => {
   const [users, setUsers] = useState([]);
-  // const navigation = useNavigation<ContactPageProp>();
+  const navigation = useNavigation<ContactPageProp>();
 
   useEffect(() => {
     console.log('contacts');
@@ -202,7 +195,12 @@ const Contacts = () => {
       renderItem={({ item }) => <ContactListItem user={item} />}
       style={styles.contactList}
       ListHeaderComponent={() => (
-        <Pressable onPress={() => {}} style={styles.groupList}>
+        <Pressable
+          onPress={() => {
+            navigation.navigate('NewGroup');
+          }}
+          style={styles.groupList}
+        >
           <MaterialIcons name="group" size={24} color="royalblue" style={styles.groupIcon} />
           <Text style={styles.groupText}>New Group</Text>
         </Pressable>

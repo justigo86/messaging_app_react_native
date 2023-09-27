@@ -17,33 +17,33 @@ import { onCreateMessage, onUpdateMessageChat } from '../../graphql/subscription
 import { Observable } from 'rxjs';
 import { GraphQLSubscription } from '@aws-amplify/api';
 
-type MessageChatByUserID = {
-  messageChatUsersByUserId: {
-    items: {
-      id: string;
-      userId: string;
-      messageChatId: string;
-      user: {
-        id: string;
-        name: string;
-        image: string;
-        status: string;
-        createdAt: string;
-        updatedAt: string;
-      };
-      messageChat: {
-        id: string;
-        createdAt: string;
-        updatedAt: string;
-        messageChatMostRecentMessageId: string;
-      };
-      createdAt: string;
-      updatedAt: string;
-    };
-    nextToken: string;
-    startedAt: string;
-  };
-};
+// type MessageChatByUserID = {
+//   messageChatUsersByUserId: {
+//     items: {
+//       id: string;
+//       userId: string;
+//       messageChatId: string;
+//       user: {
+//         id: string;
+//         name: string;
+//         image: string;
+//         status: string;
+//         createdAt: string;
+//         updatedAt: string;
+//       };
+//       messageChat: {
+//         id: string;
+//         createdAt: string;
+//         updatedAt: string;
+//         messageChatMostRecentMessageId: string;
+//       };
+//       createdAt: string;
+//       updatedAt: string;
+//     };
+//     nextToken: string;
+//     startedAt: string;
+//   };
+// };
 
 type MessageChatData = {
   getMessageChat: {
@@ -105,42 +105,7 @@ type MessageDataByMessageChat = {
 };
 
 type OnCreateMessageSubscription = {
-  id: string;
-  text: string;
-  createdAt: string;
-  messagechatID: string;
-  userID: string;
-  updatedAt: string;
-};
-
-type OnUpdateMessageChatSubscription = {
-  id: string;
-  name: string;
-  image: string;
-  Messages: {
-    items: {
-      id: string;
-      text: string;
-      createdAt: string;
-      messagechatID: string;
-      userID: string;
-      updatedAt: string;
-    };
-    nextToken: string;
-    startedAt: string;
-  };
-  Users: {
-    items: {
-      id: string;
-      userId: string;
-      messageChatId: string;
-      createdAt: string;
-      updatedAt: string;
-    };
-    nextToken: string;
-    startedAt: string;
-  };
-  MostRecentMessage: {
+  onCreateMessage: {
     id: string;
     text: string;
     createdAt: string;
@@ -148,8 +113,48 @@ type OnUpdateMessageChatSubscription = {
     userID: string;
     updatedAt: string;
   };
-  createdAt: string;
-  updatedAt: string;
+};
+
+type OnUpdateMessageChatSubscription = {
+  onUpdateMessageChat: {
+    id: string;
+    name: string;
+    image: string;
+    Messages: {
+      items: {
+        id: string;
+        text: string;
+        createdAt: string;
+        messagechatID: string;
+        userID: string;
+        updatedAt: string;
+      };
+      nextToken: string;
+      startedAt: string;
+    };
+    Users: {
+      items: {
+        id: string;
+        userId: string;
+        messageChatId: string;
+        createdAt: string;
+        updatedAt: string;
+      };
+      nextToken: string;
+      startedAt: string;
+    };
+    MostRecentMessage: {
+      id: string;
+      text: string;
+      createdAt: string;
+      messagechatID: string;
+      userID: string;
+      updatedAt: string;
+    };
+    createdAt: string;
+    updatedAt: string;
+    messageChatMostRecentMessageId: string;
+  };
 };
 
 const MessageChat = ({ route }) => {
@@ -222,13 +227,13 @@ const MessageChat = ({ route }) => {
       ) as unknown as Observable<any>
     ).subscribe({
       next: (data) => {
-        console.log('new message subscription', data.value.data.onCreateMessage);
-        // setMessages((existingMessages) => [data.value.data.onCreateMessage, ...existingMessages]);
-        fetchChatMessages();
+        // console.log('new message subscription', data.value.data.onCreateMessage);
+        setMessages((existingMessages) => [data.value.data.onCreateMessage, ...existingMessages]);
+        // fetchChatMessages();
       },
       error: (err) => console.log('message subscription error', err),
     });
-    console.log('new message subscription complete');
+    // console.log('new message subscription complete');
 
     //unsubscribe to prevent memory leak
     return () => messageSubscription.unsubscribe();
