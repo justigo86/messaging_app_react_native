@@ -61,15 +61,15 @@ type MessageChatData = {
   id: string;
 };
 
-type GetUserData = {
-  getUser: {
-    name: string;
-    id: string;
-    messagechats: {
-      items: MessageChatData[];
-    };
-  };
-};
+// type GetUserData = {
+//   getUser: {
+//     name: string;
+//     id: string;
+//     messagechats: {
+//       items: MessageChatData[];
+//     };
+//   };
+// };
 
 type CreateMessageChat = {
   createMessageChat: {

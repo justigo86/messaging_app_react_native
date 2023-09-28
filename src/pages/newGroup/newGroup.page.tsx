@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { FlatList, View, TextInput, StyleSheet, Button } from 'react-native';
-import { API, graphqlOperation } from 'aws-amplify';
+import { API, Auth, graphqlOperation } from 'aws-amplify';
 import { useNavigation } from '@react-navigation/native';
 import { listUsers } from '../../graphql/queries';
 import ContactListItem from '../../components/contactList/contactListItem.component';
 import styles from './newGroup.styles';
 import { GraphQLResult } from '@aws-amplify/api';
+import { createMessageChat, createMessageChatUser } from '../../graphql/mutations';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../../navigation/navigator.component';
+import { Message, ModelMessageChatUserConnection, ModelMessageConnection } from '../../API';
 
 type UsersData = {
   listUsers: {
@@ -32,12 +36,118 @@ type UsersData = {
   };
 };
 
+type CreateMessageChat = {
+  createMessageChat: {
+    id: string;
+    Messages: {
+      items: {
+        id: string;
+        Messages: ModelMessageConnection;
+        Users: ModelMessageChatUserConnection;
+        MostRecentMessage: Message;
+        createdAt: string;
+        updatedAt: string;
+        _version: number;
+        _deleted: Boolean;
+        _lastChangedAt: string;
+        messageChatMostRecentMessageId: string;
+        __typename: 'messageChatItem';
+      };
+      Users: {
+        items: {
+          id: string;
+          userId: string;
+          messageChatId: string;
+          createdAt: string;
+          updatedAt: string;
+          _version: number;
+          _deleted: Boolean;
+          _lastChangedAt: string;
+          __typename: 'messageUserItem';
+        };
+        nextToken;
+        startedAt: string;
+        __typename: 'messageUser';
+      };
+      MostRecentMessage: {
+        id: string;
+        text: string;
+        createdAt: string;
+        messagechatID: string;
+        userID: string;
+        updatedAt: string;
+        _version: number;
+        _deleted: Boolean;
+        _lastChangedAt: string;
+        __typename: 'mostRecentMessage';
+      };
+      createdAt: string;
+      updatedAt: string;
+      _version: number;
+      _deleted: Boolean;
+      _lastChangedAt: string;
+      messageChatMostRecentMessageId: string;
+      __typename: 'messageChat';
+    };
+  };
+};
+
+type MessageChatUserData = {
+  createMessageChatUser: {
+    id: string;
+    userId: string;
+    messageChatId: string;
+    user: {
+      id: string;
+      name: string;
+      image: string;
+      status: string;
+      Messages: {
+        nextToken: string;
+        startedAt: string;
+      };
+      messagechats: {
+        nextToken: string;
+        startedAt: string;
+      };
+      createdAt: string;
+      updatedAt: string;
+    };
+    messageChat: {
+      id: string;
+      Messages: {
+        nextToken: string;
+        startedAt: string;
+      };
+      Users: {
+        nextToken: string;
+        startedAt: string;
+      };
+      MostRecentMessage: {
+        id: string;
+        text: string;
+        createdAt: string;
+        messagechatID: string;
+        userID: string;
+        updatedAt: string;
+      };
+      createdAt: string;
+      updatedAt: string;
+      messageChatMostRecentMessageId: string;
+    };
+    createdAt: string;
+    updatedAt: string;
+  };
+};
+
+type ContactPageProp = NativeStackNavigationProp<RootStackParamList, 'Contacts'>;
+
 const ContactsScreen = () => {
   const [users, setUsers] = useState([]);
   const [groupUsers, setGroupUsers] = useState([]);
   const [name, setName] = useState('');
 
-  const navigation = useNavigation();
+  const navigation = useNavigation<ContactPageProp>();
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -57,13 +167,45 @@ const ContactsScreen = () => {
         <Button
           title="Create"
           disabled={!name || groupUsers.length < 1}
-          onPress={onCreateGroupPress}
+          onPress={createGroupChat}
         />
       ),
     });
   }, [name, groupUsers]);
 
-  const onCreateGroupPress = () => {};
+  const createGroupChat = async () => {
+    //create chat
+    const newMessageChatData = (await API.graphql(
+      graphqlOperation(createMessageChat, { input: { name } })
+    )) as { data: CreateMessageChat };
+    // console.log(newMessageChatData);
+    if (!newMessageChatData.data?.createMessageChat) {
+      console.log('Chat error.');
+    }
+    const newMessageChat = newMessageChatData.data.createMessageChat;
+
+    //add user to group chat
+    await Promise.all(
+      groupUsers.map((userId) =>
+        API.graphql(
+          graphqlOperation(createMessageChatUser, {
+            input: { messageChatId: newMessageChat.id, userId },
+          })
+        )
+      )
+    );
+
+    //add auth user to chat
+    const authUser = await Auth.currentAuthenticatedUser();
+    (await API.graphql(
+      graphqlOperation(createMessageChatUser, {
+        input: { messageChatId: newMessageChat.id, userId: authUser.attributes.sub },
+      })
+    )) as { data: MessageChatUserData };
+
+    //navigate user to chat
+    navigation.navigate('Chat', { id: newMessageChat.id });
+  };
 
   const onPress = (userID) => {
     setGroupUsers((users) => {

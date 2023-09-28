@@ -247,6 +247,8 @@ const MessageChat = ({ route }) => {
     return <ActivityIndicator />;
   }
 
+  // console.log(JSON.stringify(chat));
+
   return (
     <KeyboardAvoidingView
       keyboardVerticalOffset={Platform.OS === 'ios' ? 60 : 100}
