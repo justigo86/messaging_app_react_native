@@ -34,6 +34,7 @@ type UsersData = {
 
 const ContactsScreen = () => {
   const [users, setUsers] = useState([]);
+  const [groupUsers, setGroupUsers] = useState([]);
   const [name, setName] = useState('');
 
   const navigation = useNavigation();
@@ -52,11 +53,29 @@ const ContactsScreen = () => {
 
   useEffect(() => {
     navigation.setOptions({
-      headerRight: () => <Button title="Create" disabled={!name} onPress={onCreateGroupPress} />,
+      headerRight: () => (
+        <Button
+          title="Create"
+          disabled={!name || groupUsers.length < 1}
+          onPress={onCreateGroupPress}
+        />
+      ),
     });
-  }, [name]);
+  }, [name, groupUsers]);
 
   const onCreateGroupPress = () => {};
+
+  const onPress = (userID) => {
+    setGroupUsers((users) => {
+      if (users.includes(userID)) {
+        //if user has already been selected, remove
+        return [...users].filter((user) => user !== userID);
+      } else {
+        //add user
+        return [...users, userID];
+      }
+    });
+  };
 
   return (
     <View style={styles.container}>
@@ -66,7 +85,17 @@ const ContactsScreen = () => {
         onChangeText={setName}
         style={styles.input}
       />
-      <FlatList data={users} renderItem={({ item }) => <ContactListItem user={item} />} />
+      <FlatList
+        data={users}
+        renderItem={({ item }) => (
+          <ContactListItem
+            user={item}
+            groupSelect
+            onPress={() => onPress(item.id)}
+            isSelected={groupUsers.includes(item.id)}
+          />
+        )}
+      />
     </View>
   );
 };
