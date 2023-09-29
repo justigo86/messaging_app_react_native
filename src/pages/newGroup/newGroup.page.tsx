@@ -203,6 +203,10 @@ const ContactsScreen = () => {
       })
     )) as { data: MessageChatUserData };
 
+    //clear chat members and reset group name
+    setGroupUsers([]);
+    setName('');
+
     //navigate user to chat
     navigation.navigate('Chat', { id: newMessageChat.id });
   };
