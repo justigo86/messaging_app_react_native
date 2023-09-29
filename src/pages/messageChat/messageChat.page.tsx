@@ -16,6 +16,9 @@ import { getMessageChat, listMessagesByMessageChat } from '../../graphql/queries
 import { onCreateMessage, onUpdateMessageChat } from '../../graphql/subscriptions';
 import { Observable } from 'rxjs';
 import { GraphQLSubscription } from '@aws-amplify/api';
+import { Feather } from '@expo/vector-icons';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../../navigation/navigator.component';
 
 // type MessageChatByUserID = {
 //   messageChatUsersByUserId: {
@@ -157,9 +160,12 @@ type OnUpdateMessageChatSubscription = {
   };
 };
 
+type GroupInfoPageProp = NativeStackNavigationProp<RootStackParamList, 'GroupInfo'>;
+
 const MessageChat = ({ route }) => {
   // const route = useRoute();
   const navigation = useNavigation();
+  const groupNavigation = useNavigation<GroupInfoPageProp>();
   const messageChatID = route.params.id;
   const [chat, setChat] = useState(null);
   const [messages, setMessages] = useState<MessageData[]>([]);
@@ -240,8 +246,18 @@ const MessageChat = ({ route }) => {
   }, [messageChatID]);
 
   useEffect(() => {
-    navigation.setOptions({ title: route.params.name });
-  }, [route.params.name]);
+    navigation.setOptions({
+      title: route.params.name,
+      headerRight: () => (
+        <Feather
+          name="more-vertical"
+          size={24}
+          color="black"
+          onPress={() => groupNavigation.navigate('GroupInfo', { id: messageChatID })}
+        />
+      ),
+    });
+  }, [route.params.name, messageChatID]);
 
   if (!chat) {
     return <ActivityIndicator />;
