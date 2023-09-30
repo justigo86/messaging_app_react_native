@@ -6,6 +6,7 @@ import { onUpdateMessageChat } from '../../graphql/subscriptions';
 import { Observable } from 'rxjs';
 import { GraphQLSubscription } from '@aws-amplify/api';
 import styles from './groupInfo.styles';
+import { deleteMessageChatUser } from '../../graphql/mutations';
 
 type MessageChatData = {
   getMessageChat: {
@@ -75,6 +76,99 @@ type OnUpdateMessageChatSubscription = {
   };
 };
 
+type UserToDelete = {
+  deleteMessageChatUser: {
+    id: string;
+    userId: string;
+    messageChatId: string;
+    user: {
+      id: string;
+      name: string;
+      image: string;
+      status: string;
+      Messages: {
+        nextToken: string;
+        startedAt: string;
+      };
+      messagechats: {
+        nextToken: string;
+        startedAt: string;
+      };
+      createdAt: string;
+      updatedAt: string;
+      _version: string;
+      _deleted: string;
+    };
+    messageChat: {
+      id: string;
+      name: string;
+      image: string;
+      Messages: {
+        nextToken: string;
+        startedAt: string;
+      };
+      Users: {
+        nextToken: string;
+        startedAt: string;
+      };
+      MostRecentMessage: {
+        id: string;
+        text: string;
+        createdAt: string;
+        messagechatID: string;
+        userID: string;
+        updatedAt: string;
+        _version: string;
+        _deleted: string;
+      };
+      createdAt: string;
+      updatedAt: string;
+      _version: string;
+      _deleted: string;
+      messageChatMostRecentMessageId: string;
+    };
+    createdAt: string;
+    updatedAt: string;
+    _version: string;
+    _deleted: string;
+  };
+};
+
+export const getMessageChat = /* GraphQL */ `
+  query GetMessageChat($id: ID!) {
+    getMessageChat(id: $id) {
+      id
+      updatedAt
+      name
+      Users {
+        items {
+          id
+          messageChatId
+          userId
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+          user {
+            id
+            name
+            status
+            image
+          }
+        }
+        nextToken
+        startedAt
+      }
+      createdAt
+      _version
+      _deleted
+      _lastChangedAt
+      messageChatMostRecentMessageId
+    }
+  }
+`;
+
 const GroupInfo = ({ route }) => {
   const [messageChat, setMessageChat] = useState(null);
 
@@ -112,6 +206,28 @@ const GroupInfo = ({ route }) => {
     return () => groupInfoSubscription.unsubscribe();
   }, [messageChatID]);
 
+  const removeUser = async (user) => {
+    const deleteUser = await API.graphql(
+      graphqlOperation(deleteMessageChatUser, { input: { id: user.id, _version: user._version } })
+    );
+    console.log('User deletion.', deleteUser);
+  };
+
+  const selectContact = (user) => {
+    Alert.alert(`Remove ${user.user.name} from group?`),
+      [
+        {
+          style: 'cancel',
+          title: 'Cancel',
+        },
+        {
+          style: 'destructive',
+          title: 'Remove',
+          onPress: () => removeUser(user),
+        },
+      ];
+  };
+
   if (!messageChat) {
     return <ActivityIndicator />;
   }
@@ -124,46 +240,13 @@ const GroupInfo = ({ route }) => {
       <View style={styles.section}>
         <FlatList
           data={messageChat.Users.items}
-          renderItem={({ item }) => <ContactListItem user={item.user} />}
+          renderItem={({ item }) => (
+            <ContactListItem user={item.user} onPress={() => selectContact(item)} />
+          )}
         />
       </View>
     </View>
   );
 };
-
-export const getMessageChat = /* GraphQL */ `
-  query GetMessageChat($id: ID!) {
-    getMessageChat(id: $id) {
-      id
-      updatedAt
-      name
-      Users {
-        items {
-          id
-          messageChatId
-          userId
-          createdAt
-          updatedAt
-          _version
-          _deleted
-          _lastChangedAt
-          user {
-            id
-            name
-            status
-            image
-          }
-        }
-        nextToken
-        startedAt
-      }
-      createdAt
-      _version
-      _deleted
-      _lastChangedAt
-      messageChatMostRecentMessageId
-    }
-  }
-`;
 
 export default GroupInfo;

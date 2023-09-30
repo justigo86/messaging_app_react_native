@@ -118,7 +118,7 @@ const MessageFeedItem = ({ chat, navigation }) => {
       <View style={styles.messageContent}>
         <View style={styles.row}>
           <Text style={styles.username} numberOfLines={1}>
-            {otherUser?.name}
+            {messageChat.name || otherUser?.name}
           </Text>
           <Text style={styles.time}>
             {dayjs(messageChat.MostRecentMessage?.createdAt).fromNow(true)}
