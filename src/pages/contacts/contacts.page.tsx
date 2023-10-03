@@ -39,27 +39,28 @@ type UsersData = {
   };
 };
 
-type MessageChatData = {
-  messageChat: {
-    id: string;
-    Users: {
-      items: {
-        id: string;
-        user: {
-          id: string;
-          image: string;
-          name: string;
-        };
-      };
-    };
-    MostRecentMessage: {
-      id: string;
-      createdAt: string;
-      text: string;
-    };
-  };
-  id: string;
-};
+// type MessageChatData = {
+//   messageChat: {
+//     id: string;
+//     name: string;
+//     Users: {
+//       items: {
+//         id: string;
+//         user: {
+//           id: string;
+//           image: string;
+//           name: string;
+//         };
+//       };
+//     };
+//     MostRecentMessage: {
+//       id: string;
+//       createdAt: string;
+//       text: string;
+//     };
+//   };
+//   id: string;
+// };
 
 // type GetUserData = {
 //   getUser: {
@@ -74,6 +75,7 @@ type MessageChatData = {
 type CreateMessageChat = {
   createMessageChat: {
     id: string;
+    name: string;
     Messages: {
       items: {
         id: string;
@@ -150,6 +152,7 @@ type MessageChatUserData = {
     };
     messageChat: {
       id: string;
+      name: string;
       Messages: {
         nextToken: string;
         startedAt: string;
@@ -203,7 +206,10 @@ const Contacts = () => {
     const existingChat = await getUserChat(user.id);
     if (existingChat) {
       // console.log('existingChat', existingChat);
-      navigation.navigate('Chat', { id: existingChat.messageChat.id });
+      navigation.navigate('Chat', {
+        id: existingChat.messageChat.id,
+        name: existingChat.messageChat.name,
+      });
       return;
     }
 
@@ -233,7 +239,7 @@ const Contacts = () => {
     )) as { data: MessageChatUserData };
 
     //navigate user to chat
-    navigation.navigate('Chat', { id: newMessageChat.id });
+    navigation.navigate('Chat', { id: newMessageChat.id, name: newMessageChat.name });
   };
 
   return (

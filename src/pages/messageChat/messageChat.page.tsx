@@ -51,6 +51,7 @@ import { RootStackParamList } from '../../navigation/navigator.component';
 type MessageChatData = {
   getMessageChat: {
     id: string;
+    name: string;
     Messages: {
       items: MessageData[];
       nextToken: string;
@@ -163,6 +164,7 @@ type OnUpdateMessageChatSubscription = {
 type GroupInfoPageProp = NativeStackNavigationProp<RootStackParamList, 'GroupInfo'>;
 
 const MessageChat = ({ route }) => {
+  console.log(route);
   // const route = useRoute();
   const navigation = useNavigation();
   const groupNavigation = useNavigation<GroupInfoPageProp>();

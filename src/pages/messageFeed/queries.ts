@@ -15,6 +15,7 @@ export const getUser = /* GraphQL */ `
             createdAt
             updatedAt
             messageChatMostRecentMessageId
+            name
             Users {
               items {
                 id

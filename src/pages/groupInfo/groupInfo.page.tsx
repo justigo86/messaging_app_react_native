@@ -11,6 +11,7 @@ import { deleteMessageChatUser } from '../../graphql/mutations';
 type MessageChatData = {
   getMessageChat: {
     id: string;
+    name: string;
     updatedAt: string;
     users: {
       items: {
@@ -231,6 +232,9 @@ const GroupInfo = ({ route }) => {
   if (!messageChat) {
     return <ActivityIndicator />;
   }
+
+  //filter out users that have been deleted - need to do this because deleted contacts remain for TTL (time to leave)
+  const groupContacts = messageChat.Users.items.filter((contact) => !contact._deleted);
 
   return (
     <View style={styles.container}>

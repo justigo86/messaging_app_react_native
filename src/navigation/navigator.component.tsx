@@ -10,11 +10,11 @@ import GroupInfo from '../pages/groupInfo/groupInfo.page';
 
 export type RootStackParamList = {
   Tabs: undefined;
-  MessageFeed: undefined;
-  Chat: { id: any };
-  GroupInfo: { id: any };
-  Contacts: undefined;
-  NewGroup: undefined;
+  MessageFeed: { id: any; name?: any };
+  Chat: { id: any; name?: any };
+  GroupInfo: { id: any; name?: any };
+  Contacts: { id: any; name?: any };
+  NewGroup: { id: any; name?: any };
 };
 
 const Navigator = () => {

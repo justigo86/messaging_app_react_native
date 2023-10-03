@@ -3,16 +3,19 @@ import { API, Auth, graphqlOperation } from 'aws-amplify';
 type GetUserData = {
   getUser: {
     id: string;
+    name: string;
     messagechats: {
       items: [
         {
           messageChat: {
             id: string;
+            name: string;
             Users: {
               items: [
                 {
                   user: {
                     id: string;
+                    name: string;
                   };
                 },
               ];
@@ -53,14 +56,17 @@ export const getUser = /* GraphQL */ `
   query GetUser($id: ID!) {
     getUser(id: $id) {
       id
+      name
       messagechats {
         items {
           messageChat {
             id
+            name
             Users {
               items {
                 user {
                   id
+                  name
                 }
               }
             }

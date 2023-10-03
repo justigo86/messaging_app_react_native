@@ -39,6 +39,8 @@ type UsersData = {
 type CreateMessageChat = {
   createMessageChat: {
     id: string;
+    name: string;
+    image: string | null;
     Messages: {
       items: {
         id: string;
@@ -53,42 +55,44 @@ type CreateMessageChat = {
         messageChatMostRecentMessageId: string;
         __typename: 'messageChatItem';
       };
-      Users: {
-        items: {
-          id: string;
-          userId: string;
-          messageChatId: string;
-          createdAt: string;
-          updatedAt: string;
-          _version: number;
-          _deleted: Boolean;
-          _lastChangedAt: string;
-          __typename: 'messageUserItem';
-        };
-        nextToken;
-        startedAt: string;
-        __typename: 'messageUser';
-      };
-      MostRecentMessage: {
+      nextToken: string;
+      startedAt: string;
+    };
+    Users: {
+      items: {
         id: string;
-        text: string;
+        userId: string;
+        messageChatId: string;
         createdAt: string;
-        messagechatID: string;
-        userID: string;
         updatedAt: string;
         _version: number;
         _deleted: Boolean;
         _lastChangedAt: string;
-        __typename: 'mostRecentMessage';
+        __typename: 'messageUserItem';
       };
+      nextToken;
+      startedAt: string;
+      __typename: 'messageUser';
+    };
+    MostRecentMessage: {
+      id: string;
+      text: string;
       createdAt: string;
+      messagechatID: string;
+      userID: string;
       updatedAt: string;
       _version: number;
       _deleted: Boolean;
       _lastChangedAt: string;
-      messageChatMostRecentMessageId: string;
-      __typename: 'messageChat';
+      __typename: 'mostRecentMessage';
     };
+    createdAt: string;
+    updatedAt: string;
+    _version: number;
+    _deleted: Boolean;
+    _lastChangedAt: string;
+    messageChatMostRecentMessageId: string;
+    __typename: 'messageChat';
   };
 };
 
@@ -115,6 +119,7 @@ type MessageChatUserData = {
     };
     messageChat: {
       id: string;
+      name: string;
       Messages: {
         nextToken: string;
         startedAt: string;
@@ -208,7 +213,7 @@ const ContactsScreen = () => {
     setName('');
 
     //navigate user to chat
-    navigation.navigate('Chat', { id: newMessageChat.id });
+    navigation.navigate('Chat', { id: newMessageChat.id, name: newMessageChat.name });
   };
 
   const onPress = (userID) => {

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { FlatList, View } from 'react-native';
 import MessageFeedItem from '../../components/messageFeedItem/messageFeedItem.component';
 // import chatData from '../../../assets/data/chats.json';
-import { useNavigation } from '@react-navigation/native';
 import styles from './messageFeed.styles';
 import { API, Auth, graphqlOperation } from 'aws-amplify';
 import { getUser } from './queries';
@@ -22,17 +21,21 @@ import { getUser } from './queries';
 type MessageChatData = {
   messageChat: {
     id: string;
+    messageChatMostRecentMessageId: string;
     createdAt: string;
     updatedAt: string;
+    name: string;
     Users: {
-      items: {
-        id: string;
-        user: {
+      items: [
+        {
           id: string;
-          image: string;
-          name: string;
-        };
-      };
+          user: {
+            id: string;
+            image: string;
+            name: string;
+          };
+        },
+      ];
     };
     MostRecentMessage: {
       id: string;
@@ -47,6 +50,8 @@ type GetUserData = {
   getUser: {
     name: string;
     id: string;
+    createdAt: string;
+    updatedAt: string;
     messagechats: {
       items: MessageChatData[];
     };
@@ -54,7 +59,6 @@ type GetUserData = {
 };
 
 const MessageFeed = () => {
-  const navigation = useNavigation();
   const [messageChats, setMessageChats] = useState<MessageChatData[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -75,9 +79,9 @@ const MessageFeed = () => {
         );
       });
 
-      setMessageChats(userData.data.getUser.messagechats.items);
+      setMessageChats(chatSort);
 
-      // console.log(userData.data.getUser.messagechats.items[0].messageChat);
+      // console.log(messageChats[0].messageChat.Users.items);
     } catch (e) {
       console.log('messageFeed error', e);
     }
@@ -94,9 +98,7 @@ const MessageFeed = () => {
       <FlatList
         data={messageChats}
         style={styles.list}
-        renderItem={({ item }) => (
-          <MessageFeedItem navigation={navigation} chat={item.messageChat} />
-        )}
+        renderItem={({ item }) => <MessageFeedItem chat={item.messageChat} />}
         onRefresh={fetchMessageChats}
         refreshing={loading}
       />

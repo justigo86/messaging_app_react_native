@@ -7,7 +7,9 @@ import { API, Auth, graphqlOperation } from 'aws-amplify';
 import { GraphQLSubscription } from '@aws-amplify/api';
 import { Observable } from 'rxjs';
 import { onUpdateMessageChat } from '../../graphql/subscriptions';
-// import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../../navigation/navigator.component';
+import { useNavigation } from '@react-navigation/native';
 
 dayjs.extend(relativeTime);
 
@@ -58,28 +60,20 @@ type OnUpdateMessageChatSubscription = {
   updatedAt: string;
 };
 
-const MessageFeedItem = ({ chat, navigation }) => {
+type MessageFeedPageProp = NativeStackNavigationProp<RootStackParamList, 'MessageFeed'>;
+
+const MessageFeedItem = ({ chat }) => {
   const [otherUser, setOtherUser] = useState(null);
   const [messageChat, setMessageChat] = useState(chat);
-  // const navigation = useNavigation();
-
-  // console.log(chat);
+  const navigation = useNavigation<MessageFeedPageProp>();
 
   useEffect(() => {
     const fetchUser = async () => {
       const authUser = await Auth.currentAuthenticatedUser();
-      // const userItem = chat.Users.items[0].find((item) => {
-      //   item.user.id !== authUser.attributes.sub;
-      // });
-      if (messageChat.Users.items[0].user.id === authUser.attributes.sub) {
-        setOtherUser(messageChat.Users.items[1].user);
-      } else {
-        setOtherUser(messageChat.Users.items[0].user);
-      }
-      // setOtherUser(userItem?.user);
+      const userItem = chat.Users.items.find((item) => item.user.id !== authUser.attributes.sub);
+      setOtherUser(userItem?.user);
     };
     fetchUser();
-    // console.log(chat.id);
   }, []);
 
   useEffect(() => {
@@ -88,11 +82,11 @@ const MessageFeedItem = ({ chat, navigation }) => {
         graphqlOperation(onUpdateMessageChat, { filter: { id: { eq: chat.id } } })
       ) as unknown as Observable<any>
     ).subscribe({
-      next: (data) => {
-        console.log('update subscription', data.value.data);
+      next: ({ value }) => {
+        console.log('update subscription', value.data);
         setMessageChat((chatData) => ({
           ...(chatData || {}),
-          ...data.value.data.onUpdateMessageChat,
+          ...value.data.onUpdateMessageChat,
         }));
       },
       error: (err) => console.log('feed update subscription error', err),
@@ -105,7 +99,7 @@ const MessageFeedItem = ({ chat, navigation }) => {
     navigation.navigate('Chat', {
       id: messageChat.id,
       // name: chat.user?.name,
-      name: otherUser?.name,
+      name: messageChat.name || otherUser?.name,
     });
   };
 

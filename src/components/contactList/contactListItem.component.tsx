@@ -7,6 +7,7 @@ import { AntDesign, FontAwesome } from '@expo/vector-icons';
 dayjs.extend(relativeTime);
 
 const ContactListItem = ({ user, onPress = () => {}, groupSelect = false, isSelected = false }) => {
+  // console.log('userListItem', user);
   return (
     <Pressable onPress={onPress} style={styles.container}>
       <Image source={user.image ? { uri: user.image } : null} style={styles.image} />
@@ -116,6 +117,7 @@ export default ContactListItem;
 //     };
 //     messageChat: {
 //       id: string;
+//       name: string;
 //       Messages: {
 //         nextToken: string;
 //         startedAt: string;
