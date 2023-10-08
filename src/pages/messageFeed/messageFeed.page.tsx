@@ -71,11 +71,17 @@ const MessageFeed = () => {
         graphqlOperation(getUser, { id: authUser.attributes.sub })
       )) as { data: GetUserData };
 
-      const chats = userData.data?.getUser?.messagechats?.items || [];
+      // userData.data.getUser.messagechats.items.forEach((x) => console.log(x));
+      const filteredUserData = userData.data.getUser.messagechats.items.filter(
+        (user) => user.messageChat
+      );
+      // filteredUserData.forEach((x) => console.log('filtered user', x));
+
+      const chats = filteredUserData || [];
       const chatSort = chats.sort((chat1, chat2) => {
         return (
-          new Date(chat2?.messageChat.updatedAt).valueOf() -
-          new Date(chat1?.messageChat.updatedAt).valueOf()
+          new Date(chat2?.messageChat?.updatedAt).valueOf() -
+          new Date(chat1?.messageChat?.updatedAt).valueOf()
         );
       });
 
@@ -98,7 +104,7 @@ const MessageFeed = () => {
       <FlatList
         data={messageChats}
         style={styles.list}
-        renderItem={({ item }) => <MessageFeedItem chat={item.messageChat} />}
+        renderItem={({ item }) => <MessageFeedItem chat={item?.messageChat} />}
         onRefresh={fetchMessageChats}
         refreshing={loading}
       />

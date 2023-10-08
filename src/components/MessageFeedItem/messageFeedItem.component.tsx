@@ -67,13 +67,22 @@ const MessageFeedItem = ({ chat }) => {
   const [messageChat, setMessageChat] = useState(chat);
   const navigation = useNavigation<MessageFeedPageProp>();
 
+  // console.log('messageFeedItemUser:', chat.Users.items);
+  // chat.Users.items.forEach((x) => console.log(x.user));
+
   useEffect(() => {
     const fetchUser = async () => {
       const authUser = await Auth.currentAuthenticatedUser();
-      const userItem = chat.Users.items.find((item) => item.user.id !== authUser.attributes.sub);
-      setOtherUser(userItem?.user);
+      const userItem = chat.Users?.items?.find(
+        (item) => item?.user?.id !== authUser.attributes.sub
+      );
+      if (userItem.user !== null) {
+        setOtherUser(userItem?.user);
+      }
     };
     fetchUser();
+    // console.log('other', otherUser);
+    // console.log('messageChat', messageChat);
   }, []);
 
   useEffect(() => {

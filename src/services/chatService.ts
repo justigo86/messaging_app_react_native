@@ -43,11 +43,13 @@ export const getUserChat = async (userID) => {
   // return userChat;
 
   const userWithMatchingID = userChats.find((chat) => {
-    return (
-      // chat.messageChat.Users.items.length === 2 &&
-      chat.messageChat?.Users.items.some((users) => users.user.id === userID)
-      // .find((user) => user !== undefined)
-    );
+    if (chat.messageChat) {
+      return (
+        // chat.messageChat.Users.items.length === 2 &&
+        chat.messageChat?.Users.items.some((users) => users.user.id === userID)
+        // .find((user) => user !== undefined)
+      );
+    }
   });
   return userWithMatchingID;
 };
