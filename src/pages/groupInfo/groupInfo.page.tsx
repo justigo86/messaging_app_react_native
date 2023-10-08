@@ -13,13 +13,15 @@ type MessageChatData = {
     id: string;
     name: string;
     updatedAt: string;
-    users: {
+    Users: {
       items: {
         id: string;
         messageChatID: string;
-        userID: string;
+        userId: string;
         createdAt: string;
         updatedAt: string;
+        _deleted?: boolean | null;
+        _version: string;
         user: {
           id: string;
           name: string;
@@ -32,6 +34,8 @@ type MessageChatData = {
     };
     createdAt: string;
     messageChatLastMessageId: string;
+    _deleted?: boolean | null;
+    _version: string;
   };
 };
 
@@ -48,6 +52,8 @@ type OnUpdateMessageChatSubscription = {
         messagechatID: string;
         userID: string;
         updatedAt: string;
+        _deleted?: boolean | null;
+        _version: string;
       };
       nextToken: string;
       startedAt: string;
@@ -59,6 +65,8 @@ type OnUpdateMessageChatSubscription = {
         messageChatId: string;
         createdAt: string;
         updatedAt: string;
+        _deleted?: boolean | null;
+        _version: string;
       };
       nextToken: string;
       startedAt: string;
@@ -70,70 +78,90 @@ type OnUpdateMessageChatSubscription = {
       messagechatID: string;
       userID: string;
       updatedAt: string;
+      _deleted?: boolean | null;
+      _version: string;
     };
     createdAt: string;
     updatedAt: string;
     messageChatMostRecentMessageId: string;
+    _deleted?: boolean | null;
+    _version: string;
   };
 };
 
-type UserToDelete = {
-  deleteMessageChatUser: {
-    id: string;
-    userId: string;
-    messageChatId: string;
-    user: {
-      id: string;
-      name: string;
-      image: string;
-      status: string;
-      Messages: {
-        nextToken: string;
-        startedAt: string;
-      };
-      messagechats: {
-        nextToken: string;
-        startedAt: string;
-      };
-      createdAt: string;
-      updatedAt: string;
-      _version: string;
-      _deleted: string;
-    };
-    messageChat: {
-      id: string;
-      name: string;
-      image: string;
-      Messages: {
-        nextToken: string;
-        startedAt: string;
-      };
-      Users: {
-        nextToken: string;
-        startedAt: string;
-      };
-      MostRecentMessage: {
-        id: string;
-        text: string;
-        createdAt: string;
-        messagechatID: string;
-        userID: string;
-        updatedAt: string;
-        _version: string;
-        _deleted: string;
-      };
-      createdAt: string;
-      updatedAt: string;
-      _version: string;
-      _deleted: string;
-      messageChatMostRecentMessageId: string;
-    };
-    createdAt: string;
-    updatedAt: string;
-    _version: string;
-    _deleted: string;
-  };
+// type UserToDelete = {
+//   deleteMessageChatUser: {
+//     id: string;
+//     userId: string;
+//     messageChatId: string;
+//     user: {
+//       id: string;
+//       name: string;
+//       image: string;
+//       status: string;
+//       Messages: {
+//         nextToken: string;
+//         startedAt: string;
+//       };
+//       messagechats: {
+//         nextToken: string;
+//         startedAt: string;
+//       };
+//       createdAt: string;
+//       updatedAt: string;
+//       _version: string;
+//       _deleted?: boolean | null;
+//     };
+//     messageChat: {
+//       id: string;
+//       name: string;
+//       image: string;
+//       Messages: {
+//         nextToken: string;
+//         startedAt: string;
+//       };
+//       Users: {
+//         nextToken: string;
+//         startedAt: string;
+//       };
+//       MostRecentMessage: {
+//         id: string;
+//         text: string;
+//         createdAt: string;
+//         messagechatID: string;
+//         userID: string;
+//         updatedAt: string;
+//         _version: string;
+//         _deleted?: boolean | null;
+//       };
+//       createdAt: string;
+//       updatedAt: string;
+//       _version: string;
+//       _deleted?: boolean | null;
+//       messageChatMostRecentMessageId: string;
+//     };
+//     createdAt: string;
+//     updatedAt: string;
+//     _version: string;
+//     _deleted?: boolean | null;
+//   };
+// };
+
+// type AlertType = {
+//   alert: (title: string, message?: string, buttons?: AlertButton[], options?: AlertOptions) => void;
+// };
+
+type AlertButton = {
+  text: string;
+  style: 'default' | 'cancel' | 'destructive';
+  onPress?: () => void;
 };
+
+// type AlertOptions = {
+//   cancelable: boolean;
+//   userInterfaceStyle: string;
+//   onDismiss: Function;
+// };
 
 export const getMessageChat = /* GraphQL */ `
   query GetMessageChat($id: ID!) {
@@ -215,18 +243,26 @@ const GroupInfo = ({ route }) => {
   };
 
   const selectContact = (user) => {
-    Alert.alert(`Remove ${user.user.name} from group?`),
-      [
-        {
-          style: 'cancel',
-          title: 'Cancel',
-        },
-        {
-          style: 'destructive',
-          title: 'Remove',
-          onPress: () => removeUser(user),
-        },
-      ];
+    const alertButtons: AlertButton[] = [
+      {
+        style: 'cancel',
+        text: 'Cancel',
+      },
+      {
+        style: 'destructive',
+        text: 'Remove',
+        onPress: () => removeUser(user),
+      },
+    ];
+
+    const alertConfig = {
+      title: 'Alert Title',
+      message: 'This is the alert message.',
+      buttons: alertButtons,
+      options: { cancelable: false },
+    };
+
+    Alert.alert(alertConfig.title, alertConfig.message, alertConfig.buttons, alertConfig.options);
   };
 
   if (!messageChat) {
@@ -240,10 +276,10 @@ const GroupInfo = ({ route }) => {
     <View style={styles.container}>
       <Text style={styles.title}>{messageChat.name}</Text>
 
-      <Text style={styles.sectionTitle}>{messageChat.Users.items.length} Participants</Text>
+      <Text style={styles.sectionTitle}>{groupContacts.length} Participants</Text>
       <View style={styles.section}>
         <FlatList
-          data={messageChat.Users.items}
+          data={groupContacts}
           renderItem={({ item }) => (
             <ContactListItem user={item.user} onPress={() => selectContact(item)} />
           )}

@@ -1,17 +1,12 @@
-type Message @model @auth(rules: [{ allow: public }]) {
+type Message @model @auth(rules: [{allow: public}]) {
   id: ID!
   text: String!
   createdAt: AWSDateTime!
-  messagechatID: ID!
-    @index(
-      name: "byMessageChat"
-      sortKeyFields: ["createdAt"]
-      queryField: "listMessagesByMessageChat"
-    )
+  messagechatID: ID! @index(name: "byMessageChat", sortKeyFields: ["createdAt"], queryField: "listMessagesByMessageChat")
   userID: ID! @index(name: "byUser")
 }
 
-type User @model @auth(rules: [{ allow: public }]) {
+type User @model @auth(rules: [{allow: public}]) {
   id: ID!
   name: String!
   image: String
@@ -20,11 +15,11 @@ type User @model @auth(rules: [{ allow: public }]) {
   messagechats: [MessageChat] @manyToMany(relationName: "MessageChatUser")
 }
 
-type MessageChat @model @auth(rules: [{ allow: public }]) {
+type MessageChat @model @auth(rules: [{allow: public}]) {
   id: ID!
   name: String
   image: String
   Messages: [Message] @hasMany(indexName: "byMessageChat", fields: ["id"])
   Users: [User] @manyToMany(relationName: "MessageChatUser")
   MostRecentMessage: Message @hasOne
-}
+} 

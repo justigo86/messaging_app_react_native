@@ -10,6 +10,7 @@ export const getUser = /* GraphQL */ `
       updatedAt
       messagechats {
         items {
+          _deleted
           messageChat {
             id
             createdAt
@@ -39,6 +40,56 @@ export const getUser = /* GraphQL */ `
   }
 `;
 
+export const getUserEdit = /* GraphQL */ `
+  query GetUser($id: ID!) {
+    getUser(id: $id) {
+      id
+      name
+      image
+      status
+      Messages {
+        items {
+          id
+          text
+          createdAt
+          messagechatID
+          userID
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+          __typename
+        }
+        nextToken
+        startedAt
+        __typename
+      }
+      messagechats {
+        items {
+          id
+          userId
+          messageChatId
+          createdAt
+          updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+          __typename
+        }
+        nextToken
+        startedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+  }
+`;
+
 export const getMessageChatUser = /* GraphQL */ `
   query GetMessageChatUser($id: ID!) {
     getMessageChatUser(id: $id) {
@@ -53,13 +104,19 @@ export const getMessageChatUser = /* GraphQL */ `
         Messages {
           nextToken
           startedAt
+          __typename
         }
         messagechats {
           nextToken
           startedAt
+          __typename
         }
         createdAt
         updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
       }
       messageChat {
         id
@@ -68,10 +125,36 @@ export const getMessageChatUser = /* GraphQL */ `
         Messages {
           nextToken
           startedAt
+          __typename
         }
         Users {
           nextToken
           startedAt
+          __typename
+          items {
+            user {
+              id
+              name
+              image
+              status
+              Messages {
+                nextToken
+                startedAt
+                __typename
+              }
+              messagechats {
+                nextToken
+                startedAt
+                __typename
+              }
+              createdAt
+              updatedAt
+              _version
+              _deleted
+              _lastChangedAt
+              __typename
+            }
+          }
         }
         MostRecentMessage {
           id
@@ -80,13 +163,25 @@ export const getMessageChatUser = /* GraphQL */ `
           messagechatID
           userID
           updatedAt
+          _version
+          _deleted
+          _lastChangedAt
+          __typename
         }
         createdAt
         updatedAt
+        _version
+        _deleted
+        _lastChangedAt
         messageChatMostRecentMessageId
+        __typename
       }
       createdAt
       updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
     }
   }
 `;

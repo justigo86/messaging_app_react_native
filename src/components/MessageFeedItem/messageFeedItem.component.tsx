@@ -10,6 +10,7 @@ import { onUpdateMessageChat } from '../../graphql/subscriptions';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../navigation/navigator.component';
 import { useNavigation } from '@react-navigation/native';
+// import { useNavigation } from '@react-navigation/native';
 
 dayjs.extend(relativeTime);
 
@@ -66,6 +67,8 @@ const MessageFeedItem = ({ chat }) => {
   const [otherUser, setOtherUser] = useState(null);
   const [messageChat, setMessageChat] = useState(chat);
   const navigation = useNavigation<MessageFeedPageProp>();
+
+  console.log('messageFeedItem chat', messageChat);
 
   useEffect(() => {
     const fetchUser = async () => {
