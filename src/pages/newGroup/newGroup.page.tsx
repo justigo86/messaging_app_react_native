@@ -159,8 +159,6 @@ const ContactsScreen = () => {
       const usersData = (await API.graphql(
         graphqlOperation(listUsers)
       )) as GraphQLResult<UsersData>;
-      // console.log(usersData.data?.listUsers?.items);
-
       setUsers(usersData.data?.listUsers?.items);
     };
     fetchUsers();
@@ -183,7 +181,6 @@ const ContactsScreen = () => {
     const newMessageChatData = (await API.graphql(
       graphqlOperation(createMessageChat, { input: { name } })
     )) as { data: CreateMessageChat };
-    // console.log(newMessageChatData);
     if (!newMessageChatData.data?.createMessageChat) {
       console.log('Chat error.');
     }

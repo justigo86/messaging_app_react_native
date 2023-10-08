@@ -71,11 +71,9 @@ const MessageFeed = () => {
         graphqlOperation(getUser, { id: authUser.attributes.sub })
       )) as { data: GetUserData };
 
-      // userData.data.getUser.messagechats.items.forEach((x) => console.log(x));
       const filteredUserData = userData.data.getUser.messagechats.items.filter(
         (user) => user.messageChat
       );
-      // filteredUserData.forEach((x) => console.log('filtered user', x));
 
       const chats = filteredUserData || [];
       const chatSort = chats.sort((chat1, chat2) => {
@@ -86,8 +84,6 @@ const MessageFeed = () => {
       });
 
       setMessageChats(chatSort);
-
-      // console.log(messageChats[0].messageChat.Users.items);
     } catch (e) {
       console.log('messageFeed error', e);
     }
@@ -95,7 +91,6 @@ const MessageFeed = () => {
   };
 
   useEffect(() => {
-    console.log('messageFeed');
     fetchMessageChats();
   }, []);
 

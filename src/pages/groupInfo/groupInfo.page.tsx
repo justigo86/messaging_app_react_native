@@ -174,8 +174,6 @@ const GroupInfo = ({ route }) => {
   const [messageChat, setMessageChat] = useState(null);
 
   const messageChatID = route.params.id;
-  console.log('routeID', messageChatID);
-
   useEffect(() => {
     const fetchChat = async () => {
       const chat = (await API.graphql(graphqlOperation(getMessageChat, { id: messageChatID }))) as {
@@ -184,7 +182,6 @@ const GroupInfo = ({ route }) => {
       setMessageChat(chat.data?.getMessageChat);
     };
     fetchChat();
-    console.log('groupChat', messageChat);
 
     // Subscribe to onUpdateMessageChat
     const groupInfoSubscription = (

@@ -194,7 +194,6 @@ const Contacts = () => {
           graphqlOperation(listUsers)
         )) as GraphQLResult<UsersData>; //necessary due to typing restrictions
         setUsers(usersData?.data?.listUsers?.items);
-        // console.log('contacts page', users[0]);
       } catch (e) {
         console.log('contact error', e);
       }
@@ -204,8 +203,8 @@ const Contacts = () => {
 
   const createUserChat = async (user) => {
     const existingChat = await getUserChat(user.id);
+    console.log('contacts.page user ID:', user.id);
     if (existingChat) {
-      // console.log('existingChat', existingChat);
       navigation.navigate('Chat', {
         id: existingChat.messageChat.id,
         name: existingChat.messageChat.name,
@@ -217,7 +216,6 @@ const Contacts = () => {
     const newMessageChatData = (await API.graphql(
       graphqlOperation(createMessageChat, { input: {} })
     )) as { data: CreateMessageChat };
-    // console.log(newMessageChatData);
     if (!newMessageChatData.data?.createMessageChat) {
       console.log('Chat error.');
     }

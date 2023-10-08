@@ -7,7 +7,6 @@ import { AntDesign, FontAwesome } from '@expo/vector-icons';
 dayjs.extend(relativeTime);
 
 const ContactListItem = ({ user, onPress = () => {}, groupSelect = false, isSelected = false }) => {
-  // console.log('userListItem', user);
   return (
     <Pressable onPress={onPress} style={styles.container}>
       <Image source={user.image ? { uri: user.image } : null} style={styles.image} />
@@ -150,7 +149,6 @@ export default ContactListItem;
 
 // const ContactListItem = ({ user, onPress = () => {} }, groupSelect = false) => {
 // const navigation = useNavigation<ContactPageProp>();
-// console.log('listItemUser: ', user);
 
 //MOVED to contacts.page
 // const onPress = async () => {
@@ -166,7 +164,6 @@ export default ContactListItem;
 //     const newMessageChatData = (await API.graphql(
 //       graphqlOperation(createMessageChat, { input: {} })
 //     )) as { data: MessageChatData };
-//     // console.log(newMessageChatData);
 //     if (!newMessageChatData.data?.createMessageChat) {
 //       console.log('Chat error.');
 //     }

@@ -28,28 +28,28 @@ type GetUserData = {
 };
 
 export const getUserChat = async (userID) => {
+  console.log('chatServices userID:', userID);
   const authUser = await Auth.currentAuthenticatedUser();
 
   //retrieve user chat rooms
   const userData = (await API.graphql(
     graphqlOperation(getUser, { id: authUser.attributes.sub })
   )) as { data: GetUserData };
-  const userChats = userData.data?.getUser?.messagechats?.items || [];
-  // console.log(userChats);
-
+  const filteredUserData = userData.data.getUser.messagechats.items.filter(
+    (user) => user.messageChat
+  );
+  const userChats = filteredUserData || [];
   // const userChat = userChats.find((chat) => {
   //   chat.messageChat.Users.items.some((users) => users.user.id === userID);
   // });
   // return userChat;
 
   const userWithMatchingID = userChats.find((chat) => {
-    if (chat.messageChat) {
-      return (
-        // chat.messageChat.Users.items.length === 2 &&
-        chat.messageChat?.Users.items.some((users) => users.user.id === userID)
-        // .find((user) => user !== undefined)
-      );
-    }
+    return (
+      // chat.messageChat.Users.items.length === 2 &&
+      chat.messageChat?.Users.items.some((users) => users?.user?.id === userID)
+      // .find((user) => user !== undefined)
+    );
   });
   return userWithMatchingID;
 };

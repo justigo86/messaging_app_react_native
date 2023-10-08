@@ -67,9 +67,6 @@ const MessageFeedItem = ({ chat }) => {
   const [messageChat, setMessageChat] = useState(chat);
   const navigation = useNavigation<MessageFeedPageProp>();
 
-  // console.log('messageFeedItemUser:', chat.Users.items);
-  // chat.Users.items.forEach((x) => console.log(x.user));
-
   useEffect(() => {
     const fetchUser = async () => {
       const authUser = await Auth.currentAuthenticatedUser();
@@ -81,8 +78,6 @@ const MessageFeedItem = ({ chat }) => {
       }
     };
     fetchUser();
-    // console.log('other', otherUser);
-    // console.log('messageChat', messageChat);
   }, []);
 
   useEffect(() => {

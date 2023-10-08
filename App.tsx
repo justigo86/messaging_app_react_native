@@ -81,13 +81,11 @@ function App() {
     const fetchUser = async () => {
       //pull current user data to assign to variable
       const authUser = await Auth.currentAuthenticatedUser({ bypassCache: true });
-      // console.log(authUser);
       //bypassCache prevents using cache for user authentication to check DB each time
       //import getUser query to pull SubID from user DB data
       const userData = (await API.graphql(
         graphqlOperation(getUser, { id: authUser.attributes.sub })
       )) as { data: UserData };
-      // console.log(userData);
       //check if user in DB
       if (userData.data?.getUser) {
         // console.log('User already in DB.');
@@ -100,7 +98,6 @@ function App() {
         image: getRandomImage(),
         status: 'Placeholder status.',
       };
-      // console.log(newUser);
 
       await API.graphql(graphqlOperation(createUser, { input: newUser }));
     };

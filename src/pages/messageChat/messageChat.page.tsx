@@ -164,7 +164,7 @@ type OnUpdateMessageChatSubscription = {
 type GroupInfoPageProp = NativeStackNavigationProp<RootStackParamList, 'GroupInfo'>;
 
 const MessageChat = ({ route }) => {
-  console.log(route);
+  console.log('messageChat route:', route);
   // const route = useRoute();
   const navigation = useNavigation();
   const groupNavigation = useNavigation<GroupInfoPageProp>();
@@ -190,7 +190,6 @@ const MessageChat = ({ route }) => {
 
   //to fetch chat
   useEffect(() => {
-    console.log('messageChat');
     fetchChats();
   }, [messageChatID]);
 
@@ -201,7 +200,6 @@ const MessageChat = ({ route }) => {
       ) as unknown as Observable<any>
     ).subscribe({
       next: (data) => {
-        // console.log('chat update subscription', data.value.data);
         setChat((chatData) => ({ ...(chatData || {}), ...data.value.data.onUpdateMessageChat }));
       },
       error: (err) => console.log('update subscription error', err),
@@ -235,13 +233,11 @@ const MessageChat = ({ route }) => {
       ) as unknown as Observable<any>
     ).subscribe({
       next: (data) => {
-        // console.log('new message subscription', data.value.data.onCreateMessage);
         setMessages((existingMessages) => [data.value.data.onCreateMessage, ...existingMessages]);
         // fetchChatMessages();
       },
       error: (err) => console.log('message subscription error', err),
     });
-    // console.log('new message subscription complete');
 
     //unsubscribe to prevent memory leak
     return () => messageSubscription.unsubscribe();
