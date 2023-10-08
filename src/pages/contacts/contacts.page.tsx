@@ -4,7 +4,7 @@ import ContactListItem from '../../components/contactList/contactListItem.compon
 import { useEffect, useState } from 'react';
 import styles from './contacts.styles';
 import { API, graphqlOperation, Auth } from 'aws-amplify';
-import { listUsers } from '../../graphql/queries';
+import { getMessageChatUser, listUsers } from '../../graphql/queries';
 import { createMessageChat, createMessageChatUser } from '../../graphql/mutations';
 import { GraphQLResult } from '@aws-amplify/api';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -178,6 +178,76 @@ type MessageChatUserData = {
   };
 };
 
+type MessageChatNonAuthUserData = {
+  getMessageChatUser: {
+    id: string;
+    userId: string;
+    messageChatId: string;
+    user: {
+      id: string;
+      name: string;
+      image: string;
+      status: string;
+      Messages: {
+        nextToken: string;
+        startedAt: string;
+        __typename: string;
+      };
+      messagechats: {
+        nextToken: string;
+        startedAt: string;
+        __typename: string;
+      };
+      createdAt: string;
+      updatedAt: string;
+      _version: string;
+      _deleted: string;
+      _lastChangedAt: string;
+      __typename: string;
+    };
+    messageChat: {
+      id: string;
+      name: string;
+      image: string;
+      Messages: {
+        nextToken: string;
+        startedAt: string;
+        __typename: string;
+      };
+      Users: {
+        nextToken: string;
+        startedAt: string;
+        __typename: string;
+      };
+      MostRecentMessage: {
+        id: string;
+        text: string;
+        createdAt: string;
+        messagechatID: string;
+        userID: string;
+        updatedAt: string;
+        _version: string;
+        _deleted: string;
+        _lastChangedAt: string;
+        __typename: string;
+      };
+      createdAt: string;
+      updatedAt: string;
+      _version: string;
+      _deleted: string;
+      _lastChangedAt: string;
+      messageChatMostRecentMessageId: string;
+      __typename: string;
+    };
+    createdAt: string;
+    updatedAt: string;
+    _version: string;
+    _deleted: string;
+    _lastChangedAt: string;
+    __typename: string;
+  };
+};
+
 type ContactPageProp = NativeStackNavigationProp<RootStackParamList, 'Contacts'>;
 //needed to set a prop type for useNavigation with Chat params used below
 
@@ -202,12 +272,17 @@ const Contacts = () => {
   }, []);
 
   const createUserChat = async (user) => {
+    console.log('userChat', user);
+    const authUser = await Auth.currentAuthenticatedUser();
+    // console.log(authUser.attributes.sub);
     const existingChat = await getUserChat(user.id);
-    console.log('contacts.page user ID:', user.id);
     if (existingChat) {
+      const username = existingChat.messageChat.Users.items.filter(
+        (user) => user.user.name !== authUser.attributes.sub
+      );
       navigation.navigate('Chat', {
         id: existingChat.messageChat.id,
-        name: existingChat.messageChat.name,
+        name: username[0].user.name,
       });
       return;
     }
@@ -229,7 +304,6 @@ const Contacts = () => {
     )) as { data: MessageChatUserData };
 
     //add auth user to chat
-    const authUser = await Auth.currentAuthenticatedUser();
     (await API.graphql(
       graphqlOperation(createMessageChatUser, {
         input: { messageChatId: newMessageChat.id, userId: authUser.attributes.sub },
@@ -237,7 +311,7 @@ const Contacts = () => {
     )) as { data: MessageChatUserData };
 
     //navigate user to chat
-    navigation.navigate('Chat', { id: newMessageChat.id, name: newMessageChat.name });
+    navigation.navigate('Chat', { id: newMessageChat.id, name: user.name });
   };
 
   return (

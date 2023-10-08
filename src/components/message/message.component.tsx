@@ -11,12 +11,12 @@ const Message = ({ message }) => {
   const [user, setUser] = useState(false);
 
   useEffect(() => {
+    console.log('message');
     const userMessage = async () => {
       const authUser = await Auth.currentAuthenticatedUser();
 
       setUser(message.userID === authUser.attributes.sub);
     };
-
     userMessage();
   }, []);
 

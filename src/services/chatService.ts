@@ -38,6 +38,7 @@ export const getUserChat = async (userID) => {
   const filteredUserData = userData.data.getUser.messagechats.items.filter(
     (user) => user.messageChat
   );
+  // console.log('filteredUser: ', filteredUserData);
   const userChats = filteredUserData || [];
   // const userChat = userChats.find((chat) => {
   //   chat.messageChat.Users.items.some((users) => users.user.id === userID);
@@ -46,11 +47,13 @@ export const getUserChat = async (userID) => {
 
   const userWithMatchingID = userChats.find((chat) => {
     return (
-      // chat.messageChat.Users.items.length === 2 &&
+      //=== Number(2) for conversion to as === 2 causes error with types overlap
+      chat.messageChat.Users.items.length === Number(2) &&
       chat.messageChat?.Users.items.some((users) => users?.user?.id === userID)
       // .find((user) => user !== undefined)
     );
   });
+  // console.log('matching user', userWithMatchingID.messageChat.Users.items[2].user);
   return userWithMatchingID;
 };
 
