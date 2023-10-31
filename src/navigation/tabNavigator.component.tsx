@@ -1,6 +1,7 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MessageFeed from '../pages/messageFeed/messageFeed.page';
 import { Ionicons, Entypo } from '@expo/vector-icons';
+import styles from './tabNavigator.styles';
 
 const Tab = createBottomTabNavigator();
 
@@ -8,18 +9,15 @@ import { View, Text, StyleSheet } from 'react-native';
 import Settings from '../pages/settings/settings.page';
 export const DummyComponent = () => {
   return (
-    <View style={dummyStyles.container}>
-      <Text>Placeholder</Text>
+    <View style={styles.container}>
+      <Text style={styles.header}>Greetings!</Text>
+      <Text>Welcome to a small, bare-bones personal project app.</Text>
+      <Text>This is just a bare-bones chat app for now.</Text>
+      <Text>Feel free to chat with other users via contacts.</Text>
+      <Text>Hopefully your experience is seamless.</Text>
     </View>
   );
 };
-const dummyStyles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
 
 const TabNavigator = () => {
   return (
@@ -36,16 +34,16 @@ const TabNavigator = () => {
         component={DummyComponent}
         options={{ tabBarIcon: () => <Ionicons size={32} name="home" /> }}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name="Calls"
         component={DummyComponent}
         options={{ tabBarIcon: () => <Ionicons size={32} name="call" /> }}
-      />
-      <Tab.Screen
+      /> */}
+      {/* <Tab.Screen
         name="Camera"
         component={DummyComponent}
         options={{ tabBarIcon: () => <Ionicons size={32} name="camera" /> }}
-      />
+      /> */}
       <Tab.Screen
         name="Chats"
         component={MessageFeed}

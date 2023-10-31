@@ -183,6 +183,7 @@ const MessageChat = ({ route }) => {
 
       // setChat(chatData.data.messageChatUsersByUserId.items);
       setChat(chatData.data?.getMessageChat);
+      console.log(route);
     } catch (e) {
       console.log('fetch chat error', e);
     }

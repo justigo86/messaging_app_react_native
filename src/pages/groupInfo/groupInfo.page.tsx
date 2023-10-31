@@ -24,7 +24,7 @@ type MessageChatData = {
           id: string;
           name: string;
           status: string;
-          image: string;
+          image?: string;
         };
       };
       nextToken: string;
@@ -39,7 +39,7 @@ type OnUpdateMessageChatSubscription = {
   onUpdateMessageChat: {
     id: string;
     name: string;
-    image: string;
+    image?: string;
     Messages: {
       items: {
         id: string;
@@ -85,7 +85,7 @@ type UserToDelete = {
     user: {
       id: string;
       name: string;
-      image: string;
+      image?: string;
       status: string;
       Messages: {
         nextToken: string;
@@ -103,7 +103,7 @@ type UserToDelete = {
     messageChat: {
       id: string;
       name: string;
-      image: string;
+      image?: string;
       Messages: {
         nextToken: string;
         startedAt: string;
