@@ -72,10 +72,22 @@ const MessageFeed = () => {
       )) as { data: GetUserData };
 
       const filteredUserData = userData.data.getUser.messagechats.items.filter(
-        (user) => user.messageChat
+        (chat) => chat.messageChat
       );
 
-      const chats = filteredUserData || [];
+      const filteredDeletedUsers = filteredUserData.filter((chat) => {
+        const users = chat.messageChat.Users?.items;
+        if (users) {
+          //see if ANY (some) items in Users array have a null/deleted user
+          const hasNullUser = users.some((user) => user.user === null);
+          //if not, include the messageChat
+          return !hasNullUser;
+        }
+        //if the chat has no Users or items.user, filter
+        return true;
+      });
+
+      const chats = filteredDeletedUsers || [];
       const chatSort = chats.sort((chat1, chat2) => {
         return (
           new Date(chat2?.messageChat?.updatedAt).valueOf() -
